@@ -14,9 +14,9 @@ describe('bunny-tracker application', function () {
     browser = client as any;
   });
 
-  it('should display message saying App works !', async function () {
+  it('should display message saying Search for Bunnies', async function () {
     const text = await browser.getText('app-home h1');
-    expect(text).to.equal('App works !');
+    expect(text).to.equal('Search for Bunnies');
   });
 
 
