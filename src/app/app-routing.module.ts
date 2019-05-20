@@ -1,7 +1,7 @@
 import { HomeComponent } from './components/home/home.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AddBunnyComponent } from "./components/add-bunny/add-bunny.component";
+import { AddBunnyComponent } from './components/add-bunny/add-bunny.component';
 
 const routes: Routes = [
   {
