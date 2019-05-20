@@ -80,17 +80,17 @@ You can do this! Just by importing your library in npm dependencies (not devDepe
 Maybe you want to execute the application in the browser with hot reload ? You can do it with `npm run ng:serve:web`.
 Note that you can't use Electron or NodeJS native libraries in this case. Please check `providers/electron.service.ts` to watch how conditional import of electron/Native libraries is done.
 
-[build-badge]: https://travis-ci.org/jazzepi/angular-electron.svg?branch=master
-[build]: https://travis-ci.org/jazzepi/angular-electron
-[dependencyci-badge]: https://dependencyci.com/github/jazzepi/angular-electron/badge
-[dependencyci]: https://dependencyci.com/github/jazzepi/angular-electron
+[build-badge]: https://travis-ci.org/jazzepi/bunny-tracker.svg?branch=master
+[build]: https://travis-ci.org/jazzepi/bunny-tracker
+[dependencyci-badge]: https://dependencyci.com/github/jazzepi/bunny-tracker/badge
+[dependencyci]: https://dependencyci.com/github/jazzepi/bunny-tracker
 [license-badge]: https://img.shields.io/badge/license-Apache2-blue.svg?style=flat
-[license]: https://github.com/jazzepi/angular-electron/blob/master/LICENSE.md
+[license]: https://github.com/jazzepi/bunny-tracker/blob/master/LICENSE.md
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
-[github-watch-badge]: https://img.shields.io/github/watchers/jazzepi/angular-electron.svg?style=social
-[github-watch]: https://github.com/jazzepi/angular-electron/watchers
-[github-star-badge]: https://img.shields.io/github/stars/jazzepi/angular-electron.svg?style=social
-[github-star]: https://github.com/jazzepi/angular-electron/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20angular-electron!%20https://github.com/jazzepi/angular-electron%20%F0%9F%91%8D
+[github-watch-badge]: https://img.shields.io/github/watchers/jazzepi/bunny-tracker.svg?style=social
+[github-watch]: https://github.com/jazzepi/bunny-tracker/watchers
+[github-star-badge]: https://img.shields.io/github/stars/jazzepi/bunny-tracker.svg?style=social
+[github-star]: https://github.com/jazzepi/bunny-tracker/stargazers
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20bunny-tracker!%20https://github.com/jazzepi/bunny-tracker%20%F0%9F%91%8D
 [twitter-badge]: https://img.shields.io/twitter/url/https/github.com/jazzepi/angular-electron.svg?style=social
