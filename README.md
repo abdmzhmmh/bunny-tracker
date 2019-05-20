@@ -9,18 +9,17 @@
 [![Star on GitHub][github-star-badge]][github-star]
 [![Tweet][twitter-badge]][twitter]
 
-# Introduction
+# Bunnies!
 
-Bootstrap and package your project with Angular 7 and Electron (Typescript + SASS + Hot Reload) for creating Desktop applications.
+This application is a simple database designed to be used to track bunnies for the Ohio House Rabbit Rescue shelter.
+
+# Technology
 
 Currently runs with:
 
 - Angular v7.2.0
 - Electron v4.0.0
 - Electron Builder v20.28.1
-
-With this sample, you can :
-
 - Run your app in a local development environment with Electron & Hot reload
 - Run your app in a production environment
 - Package your app into an executable file for Linux, Windows & Mac
@@ -30,7 +29,7 @@ With this sample, you can :
 Clone this repository locally :
 
 ``` bash
-git clone https://github.com/maximegris/angular-electron.git
+git clone https://github.com/jazzepi/bunny-tracker.git
 ```
 
 Install dependencies with npm :
@@ -55,9 +54,8 @@ npm install -g @angular/cli
 
 Voila! You can use your Angular + Electron app in a local development environment with hot reload !
 
-The application code is managed by `main.ts`. In this sample, the app runs with a simple Angular App (http://localhost:4200) and an Electron window.
+The application code is managed by `main.ts`. In this application, the app runs with a simple Angular App (http://localhost:4200) and an Electron window.
 The Angular component contains an example of Electron and NodeJS native lib import.
-You can disable "Developer Tools" by commenting `win.webContents.openDevTools();` in `main.ts`.
 
 ## Included Commands
 
@@ -82,24 +80,17 @@ You can do this! Just by importing your library in npm dependencies (not devDepe
 Maybe you want to execute the application in the browser with hot reload ? You can do it with `npm run ng:serve:web`.
 Note that you can't use Electron or NodeJS native libraries in this case. Please check `providers/electron.service.ts` to watch how conditional import of electron/Native libraries is done.
 
-## Branch & Packages version
-
-- Angular 4 & Electron 1 : Branch [angular4](https://github.com/maximegris/angular-electron/tree/angular4)
-- Angular 5 & Electron 1 : Branch [angular5](https://github.com/maximegris/angular-electron/tree/angular5)
-- Angular 6 & Electron 3 : Branch [angular6](https://github.com/maximegris/angular-electron/tree/angular6)
-- Angular 7 & Electron 3 : (master)
-
-[build-badge]: https://travis-ci.org/maximegris/angular-electron.svg?branch=master
-[build]: https://travis-ci.org/maximegris/angular-electron
-[dependencyci-badge]: https://dependencyci.com/github/maximegris/angular-electron/badge
-[dependencyci]: https://dependencyci.com/github/maximegris/angular-electron
+[build-badge]: https://travis-ci.org/jazzepi/angular-electron.svg?branch=master
+[build]: https://travis-ci.org/jazzepi/angular-electron
+[dependencyci-badge]: https://dependencyci.com/github/jazzepi/angular-electron/badge
+[dependencyci]: https://dependencyci.com/github/jazzepi/angular-electron
 [license-badge]: https://img.shields.io/badge/license-Apache2-blue.svg?style=flat
-[license]: https://github.com/maximegris/angular-electron/blob/master/LICENSE.md
+[license]: https://github.com/jazzepi/angular-electron/blob/master/LICENSE.md
 [prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
 [prs]: http://makeapullrequest.com
-[github-watch-badge]: https://img.shields.io/github/watchers/maximegris/angular-electron.svg?style=social
-[github-watch]: https://github.com/maximegris/angular-electron/watchers
-[github-star-badge]: https://img.shields.io/github/stars/maximegris/angular-electron.svg?style=social
-[github-star]: https://github.com/maximegris/angular-electron/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20angular-electron!%20https://github.com/maximegris/angular-electron%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/maximegris/angular-electron.svg?style=social
+[github-watch-badge]: https://img.shields.io/github/watchers/jazzepi/angular-electron.svg?style=social
+[github-watch]: https://github.com/jazzepi/angular-electron/watchers
+[github-star-badge]: https://img.shields.io/github/stars/jazzepi/angular-electron.svg?style=social
+[github-star]: https://github.com/jazzepi/angular-electron/stargazers
+[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20angular-electron!%20https://github.com/jazzepi/angular-electron%20%F0%9F%91%8D
+[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/jazzepi/angular-electron.svg?style=social
