@@ -1,8 +1,8 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
-import { ElectronService } from './providers/electron.service';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { ElectronService } from 'ngx-electron';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {

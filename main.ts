@@ -1,12 +1,45 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
+import Bunny from "./src/app/entities/bunny.schema";
+import IPC_EVENT from './src/app/ipcEvents'
+import * as sqlite from 'sqlite';
+import { Database } from "sqlite";
 
 let win, serve;
 const args = process.argv.slice(1);
+// This is basically a surrogate for "dev" environment
 serve = args.some(val => val === '--serve');
 
-function createWindow() {
+const createWindow = async () => {
+
+  const database: Database = await sqlite.open('database.sqlite');
+  await database.migrate({force: serve ? 'last' : undefined, migrationsPath: 'src/assets/migrations'});
+
+  ipcMain.on(IPC_EVENT.getBunny, async (event: any, ...args: any[]) => {
+    try {
+      event.returnValue = await database.all('SELECT * FROM bunnies');
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  ipcMain.on(IPC_EVENT.addBunny, async (event: any, bunny: Bunny) => {
+    try {
+      event.returnValue = await database.all('SELECT * FROM bunnies');
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  ipcMain.on(IPC_EVENT.deleteBunny, async (event: any, bunny: Bunny) => {
+    try {
+      event.returnValue = await database.all('SELECT * FROM bunnies');
+    } catch (err) {
+      throw err;
+    }
+  });
+
 
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
@@ -47,7 +80,7 @@ function createWindow() {
     win = null;
   });
 
-}
+};
 
 try {
 
