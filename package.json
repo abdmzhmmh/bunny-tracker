@@ -83,6 +83,7 @@
     "zone.js": "0.8.29"
   },
   "dependencies": {
+    "angularjs-datepicker": "^2.1.23",
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.1",
     "ngx-electron": "^2.1.1",

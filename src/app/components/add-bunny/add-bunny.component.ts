@@ -6,10 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./add-bunny.component.scss']
 })
 export class AddBunnyComponent implements OnInit {
+  data: any = {};
+
+  genders = ['Male', 'Female'];
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onSubmit() {
+    alert(JSON.stringify(this.data));
   }
 
 }
