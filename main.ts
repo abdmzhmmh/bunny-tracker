@@ -14,6 +14,7 @@ serve = args.some(val => val === '--serve');
 const createWindow = async () => {
 
   const database: Database = await sqlite.open('database.sqlite');
+  await database.run('PRAGMA foreign_keys = ON;');
   await database.migrate({force: serve ? 'last' : undefined, migrationsPath: 'src/assets/migrations'});
 
   ipcMain.on(IPC_EVENT.getBunny, async (event: any, ...args: any[]) => {
