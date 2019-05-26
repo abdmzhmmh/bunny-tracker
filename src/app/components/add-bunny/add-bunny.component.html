@@ -1,37 +1,48 @@
-<div class="container">
-  <h2>Add a new bunny</h2>
-  <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-    <div class="form-row">
-      <div class="col-md-4 mb-3">
-        <label for="name" required>Name</label>
-        <input id="name" name="name" class="form-control" required [(ngModel)]="data.name" #name="ngModel"/>
-      </div>
-      <div class="col-md-4 mb-3">
-        <label for="surrenderName">Surrender name</label>
-        <input id="surrenderName" name="surrenderName" class="form-control" [(ngModel)]="data.surrenderName"/>
-      </div>
-      <div class="col-md-4 mb-3">
-        <label for="gender" required>Gender</label>
-        <select class="form-control" id="gender" name="gender" [(ngModel)]="data.selectedGender" required>
-          <option *ngFor="let gender of genders" [value]="gender">{{gender}}</option>
-        </select>
-      </div>
-      <div class="form-row">
-
-      </div>
-    </div>
-    <div class="form-group"><button class="btn btn-primary" [disabled]="f.form.pristine || f.form.invalid">Add Bunny</button>
-    </div>
-  </form>
-</div>
-
-<!--name           TEXT NOT NULL,-->
-<!--surrenderName  TEXT,-->
-<!--gender              NOT NULL REFERENCES Genders (value),-->
-dateOfBirth    TEXT,          -- YYYY-MM-DD (null if unknown)
-description    TEXT,
-intakeDate     TEXT NOT NULL, -- YYYY-MM-DD
-spayDate       TEXT,          -- YYYY-MM-DD (null if not yet spayed)
-rescueType          NOT NULL REFERENCES RescueTypes (value),
-intakeReason   TEXT,
-passedAwayDate TEXT           -- YYYY-MM-DD (null if still alive)
+<form [formGroup]="data" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input required matInput size=30 type="text" formControlName="name"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Surrender Name</mat-label>
+    <input matInput type="text" formControlName="surrenderName"/>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Gender</mat-label>
+    <mat-select required formControlName="gender">
+      <mat-option *ngFor="let gender of allGenders" [value]="gender">
+        {{ gender.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <input required matInput [matDatepicker]="intakePicker" [min]="generalMinDate" [max]="todaysDate" placeholder="Intake date" formControlName="intakeDate">
+    <mat-datepicker-toggle matSuffix [for]="intakePicker"></mat-datepicker-toggle>
+    <mat-datepicker #intakePicker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Physical Description</mat-label>
+    <input matInput type="text" formControlName="description"/>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="spayPicker" [min]="generalMinDate" [max]="todaysDate" placeholder="Spay date" formControlName="spayDate">
+    <mat-datepicker-toggle matSuffix [for]="spayPicker"></mat-datepicker-toggle>
+    <mat-datepicker #spayPicker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="dateOfBirthPicker" [min]="generalMinDate" [max]="todaysDate" placeholder="Date of birth" formControlName="dateOfBirth">
+    <mat-datepicker-toggle matSuffix [for]="dateOfBirthPicker"></mat-datepicker-toggle>
+    <mat-datepicker #dateOfBirthPicker></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Intake Reason</mat-label>
+    <mat-select required formControlName="intakeReason">
+      <mat-option *ngFor="let intakeReason of allIntakeReasons" [value]="intakeReason">
+        {{ intakeReason.value }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div class="row" style="justify-content:center;margin-top:100px;">
+    <button mat-raised-button color="accent" type="submit" [disabled]="!data.valid">Add New Bunny</button>
+  </div>
+</form>

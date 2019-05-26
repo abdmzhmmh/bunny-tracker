@@ -1,6 +1,16 @@
-label[required]::after {
-  content: " *";
-  color: red;
-  white-space: pre;
+mat-form-field {
+  margin-right: 20px;
 }
 
+form {
+  margin: 20px;
+}
+
+button {
+  font-size: 2em;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}

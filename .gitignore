@@ -4,5 +4,7 @@ node_modules
 *.iml
 out
 *.js.map
+main.js
+release/
 dist/
 database.sqlite

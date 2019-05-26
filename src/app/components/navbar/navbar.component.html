@@ -1,8 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-    <div class="navbar-nav" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-      <a class="nav-item nav-link" routerLink="">Search</a>
-      <a class="nav-item nav-link" routerLink="add-bunny">Add Bunny</a>
-    </div>
-  </div>
-</nav>
+<mat-toolbar color="primary">
+  <mat-toolbar-row routerLinkActive="active" style="justify-content: space-around">
+    <button mat-raised-button class="nav-item nav-link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="mat-accent" routerLink="">Search Bunnies</button>
+    <button mat-raised-button class="nav-item nav-link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="mat-accent" routerLink="add-bunny">Add Bunny</button>
+  </mat-toolbar-row>
+</mat-toolbar>

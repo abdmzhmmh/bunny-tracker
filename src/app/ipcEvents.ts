@@ -4,4 +4,4 @@ enum IPC_EVENT {
   deleteBunny = "DELETE-BUNNY",
 }
 
-export default IPC_EVENT
+export default IPC_EVENT;
