@@ -13,8 +13,8 @@ if [[ "$PREVIOUS_VERSION" != "${CURRENT_VERSION}" ]]; then
 
   git config --local user.name "Bunny Bot"
   git config --local user.email "bunny.github.bot@gmail.com"
-  git tag ${CURRENT_VERSION}-${machine}-release
-  git log -n 1 --decorate --pretty=oneline
+  export TRAVIS_TAG=${CURRENT_VERSION}-${machine}-release
+  git tag ${TRAVIS_TAG}
 
   npm run electron:${machine}
 else
