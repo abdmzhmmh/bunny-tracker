@@ -1,6 +1,6 @@
 {
   "name": "bunny-tracker",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Electron application used to track bunnies for Ohio House Rabbit Rescue",
   "homepage": "https://github.com/jazzepi/bunny-tracker",
   "author": {

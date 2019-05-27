@@ -14,6 +14,8 @@ if [[ "$PREVIOUS_VERSION" != "${CURRENT_VERSION}" ]]; then
   git config --local user.name "Bunny Bot"
   git config --local user.email "bunny.github.bot@gmail.com"
   git tag ${CURRENT_VERSION}-${machine}-release
+  git log -n 1 --decorate --pretty=oneline
+
   npm run electron:${machine}
 else
   echo "Tags were the same, no release for this build"
