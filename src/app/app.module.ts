@@ -12,7 +12,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AddBunnyComponent } from './components/add-bunny/add-bunny.component';
-import { DatabaseService } from "./providers/DatabaseService";
+import { DatabaseService } from './providers/DatabaseService';
 import { ElectronService, NgxElectronModule } from 'ngx-electron';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -27,7 +27,6 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { AddressFormComponent } from './components/address-form/address-form.component';
 import { MatButtonModule, MatIconModule, MatDatepickerModule} from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
@@ -37,8 +36,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     HomeComponent,
     WebviewDirective,
     NavbarComponent,
-    AddBunnyComponent,
-    AddressFormComponent
+    AddBunnyComponent
   ],
   imports: [
     BrowserModule,

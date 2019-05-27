@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import Bunny from "../../entities/bunny.schema";
-import { DatabaseService } from "../../providers/DatabaseService";
+import Bunny from '../../entities/bunny.schema';
+import { DatabaseService } from '../../providers/DatabaseService';
 
 @Component({
   selector: 'app-home',
@@ -14,8 +14,7 @@ export class HomeComponent implements OnInit {
   constructor(private databaseService: DatabaseService) { }
 
   ngOnInit(): void {
-    console.log('component initialized');
-    this.databaseService.addBunny(new Bunny("Mike!"));
+    this.databaseService.addBunny(new Bunny('Mike!'));
     this.databaseService.getBunnies().subscribe((bunnies: Bunny[]) => (this.bunnies = bunnies));
   }
 

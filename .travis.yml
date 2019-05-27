@@ -1,7 +1,15 @@
+branches:
+  only:
+    - master
 language: node_js
 node_js:
   - '10'
-dist: xenial
+matrix:
+  include:
+    - os: linux
+      dist: xenial
+    - os: osx
+      osx_image: xcode10.2
 sudo: required
 services:
   - xvfb

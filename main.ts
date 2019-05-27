@@ -2,17 +2,15 @@ import { app, BrowserWindow, screen, ipcMain, MenuItem, Menu, MenuItemConstructo
 import * as path from 'path';
 import * as url from 'url';
 import * as fs from 'fs';
-import Bunny from "./src/app/entities/bunny.schema";
+import Bunny from './src/app/entities/bunny.schema';
 import * as sqlite from 'sqlite';
-import { Database } from "sqlite";
+import { Database } from 'sqlite';
 import * as log from 'electron-log';
-// @ts-ignore
-import is from 'electron-is';
 
 log.info('Application starting');
 let win, serve;
 const args = process.argv.slice(1);
-// This is basically a surrogate for "dev" environment
+// This is basically a surrogate for 'dev' environment
 serve = args.some(val => val === '--serve');
 
 // const template = [
@@ -121,7 +119,7 @@ const template: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
       {
         label: 'Source Code',
         click() {
-          shell.openExternalSync('https://github.com/Jazzepi/bunny-tracker')
+          shell.openExternalSync('https://github.com/Jazzepi/bunny-tracker');
         }
       }
     ]
@@ -131,24 +129,7 @@ const template: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
 
 Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 
-function listFiles(directoryPath) {
-  fs.readdir(directoryPath, function (err, files) {
-    //handling error
-    if (err) {
-      return console.log('Unable to scan directory: ' + err);
-    }
-    //listing all files using forEach
-    files.forEach(function (file) {
-      // Do whatever you want to do with the file
-      console.log(file);
-    });
-  });
-}
-
 const createWindow = async () => {
-
-  listFiles(path.join(__dirname, 'dist'));
-
   const migrationPath = path.join(__dirname, 'dist', 'assets', 'migrations');
   const databasePath = path.join(app.getPath('userData'), 'database.sqlite');
 
@@ -165,7 +146,7 @@ const createWindow = async () => {
     migrationsPath: serve ? 'src/assets/migrations' : path.join(__dirname, 'dist', 'assets', 'migrations')
   });
 
-  ipcMain.on('GET-BUNNY', async (event: any, ...args: any[]) => {
+  ipcMain.on('GET-BUNNY', async (event: any, ..._args: any[]) => {
     try {
       event.returnValue = await database.all('SELECT * FROM bunnies');
     } catch (err) {

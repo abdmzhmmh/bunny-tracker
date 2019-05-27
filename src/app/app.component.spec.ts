@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ElectronService } from 'ngx-electron';
+import { MatToolbarModule } from '@angular/material';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -15,7 +16,8 @@ describe('AppComponent', () => {
         ElectronService
       ],
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        MatToolbarModule
       ]
     }).compileComponents();
   }));
