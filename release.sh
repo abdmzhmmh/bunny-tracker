@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+PREVIOUS_VERSION=$(git show HEAD^:package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
+CURRENT_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')
+
+if [[ "$PREVIOUS_VERSION" != "${CURRENT_VERSION}" ]]; then
+  unameOut="$(uname -s)"
+  case "${unameOut}" in
+    Linux*)     machine=linux;;
+    Darwin*)    machine=mac;;
+    *)          echo 'Machine unkown, exiting.'; exit 1;;
+  esac
+  echo "Releasing on ${machine}"
+
+  git config --local user.name "Bunny Bot"
+  git config --local user.email "bunny.github.bot@gmail.com"
+  git tag ${CURRENT_VERSION}-${machine}-release
+  npm run electron:${machine}
+else
+  echo "Tags were the same, no release for this build"
+fi
+
