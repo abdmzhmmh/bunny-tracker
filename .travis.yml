@@ -25,11 +25,15 @@ script:
   - npm run test
   - npm run e2e
   - npm run build
+before_deploy:
+  - ./release.sh
 deploy:
   provider: releases
   api_key:
     secure: GHqAr8AT9ZUObAjLPltAO0M5eiYcftMBSkWD1Ixja7RkU6MrOHA4Bsy9moYCJtTurWKoif5LswXseUpYyol3VtSj6YvkAkyavSGIg++pfvLcgBRY3F6zQp2yvzod1I2R8T+bCa5/uPpwg+mMjJeVDr6c9002/NjlRaG8SH+w07IVSaRuNMggLFLBzySv/gzfHyjPnpI/0TAPUGcAuhUpWiauPM3jTNLRCRGVVJW5YGrIFlT9gNqjTWmw236grBuAxC2M3TAH/82y0L3AvEqEVtc4wYp/qqcCrXMCzCuIEHwIGX4i2cZlXBr4464c8VjUiavoXTpRrKWjncOqWt2uzq4GQW23d0IC62Apmt6NlYRleyDu+vpCuMkdJf83h293rzBQ/XaCtwEJG7kmXE8t9Fh3mK2MEay2toLHvej2gKe7aGneyG7GN6dGZlixYPI6LM68kz9WidD6SqhMOYuXVHrqxAcWT3exv04DNKouD59pL2im+ZXtsW+eYwQyTYSm9epySnbiRsnVTUGvOpwVNT6r3sRQboq8QyJWRqQJrEZVfEV4dqUhLIGWagVr/8oSB6VaqBnAI0LOwjzsMSOSoJYDUKrzqPmjaIuP7I8k3HcrWm8cboNQQ55J/ZQRTCvXV1L27NxG+39oE5M6pnLZoQuOXbFnQa6YSbJNfnNK0Js=
-  file: notsure
+  file_glob: true
+  file: release/bunny-tracker-*
+  draft: true
   skip_cleanup: true
   on:
     repo: Jazzepi/bunny-tracker
