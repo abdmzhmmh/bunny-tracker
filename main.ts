@@ -1,11 +1,12 @@
-import { app, BrowserWindow, screen, ipcMain, MenuItem, Menu, MenuItemConstructorOptions, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, MenuItem, MenuItemConstructorOptions, screen, shell } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import * as fs from 'fs';
 import Bunny from './src/app/entities/bunny.schema';
 import * as sqlite from 'sqlite';
 import { Database } from 'sqlite';
 import * as log from 'electron-log';
+
+process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
 log.info('Application starting');
 let win, serve;
@@ -148,6 +149,7 @@ const createWindow = async () => {
 
   ipcMain.on('GET-BUNNY', async (event: any, ..._args: any[]) => {
     try {
+      log.info('Processing GET-BUNNY event from electron thread');
       event.returnValue = await database.all('SELECT * FROM bunnies');
     } catch (err) {
       throw err;
@@ -156,6 +158,7 @@ const createWindow = async () => {
 
   ipcMain.on('ADD-BUNNY', async (event: any, bunny: Bunny) => {
     try {
+      log.info('Processing ADD-BUNNY event from electron thread');
       event.returnValue = await database.all('SELECT * FROM bunnies');
     } catch (err) {
       throw err;
@@ -164,14 +167,14 @@ const createWindow = async () => {
 
   ipcMain.on('DELETE-BUNNY', async (event: any, bunny: Bunny) => {
     try {
+      log.info('Processing DELETE-BUNNY event from electron thread');
       event.returnValue = await database.all('SELECT * FROM bunnies');
     } catch (err) {
       throw err;
     }
   });
 
-  const electronScreen = screen;
-  const size = electronScreen.getPrimaryDisplay().workAreaSize;
+  const size = screen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
   win = new BrowserWindow({
