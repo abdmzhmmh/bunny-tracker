@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { AddBunnyComponent, genderOption } from './add-bunny.component';
+import { AddBunnyComponent, GenderOption } from './add-bunny.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatDatepickerModule,
@@ -17,7 +17,7 @@ import spyOnClass from '../../../test-helpers';
 describe('AddBunnyComponent', () => {
   let component: AddBunnyComponent;
   let fixture: ComponentFixture<AddBunnyComponent>;
-  let databaseServiceMock = spyOnClass(DatabaseService);
+  const databaseServiceMock = spyOnClass(DatabaseService);
   databaseServiceMock.getAllBunnies = jasmine.createSpy().and.returnValue(of([]));
   databaseServiceMock.getGenders = jasmine.createSpy().and.returnValue(of([]));
   databaseServiceMock.getRescueTypes = jasmine.createSpy().and.returnValue(of([]));
@@ -27,7 +27,7 @@ describe('AddBunnyComponent', () => {
       declarations: [AddBunnyComponent],
       providers: [{
         provide: DatabaseService, useValue: databaseServiceMock,
-      },{
+      }, {
         provide: MatSnackBar, useValue: spyOnClass(MatSnackBar)
       }],
       imports: [BrowserAnimationsModule, ReactiveFormsModule, FormsModule, MatMomentDateModule, MatDatepickerModule, MatSelectModule, MatFormFieldModule, MatInputModule]

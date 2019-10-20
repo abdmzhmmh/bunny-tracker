@@ -17,7 +17,7 @@ import spyOnClass from '../../../test-helpers';
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  let databaseServiceMock = spyOnClass(DatabaseService);
+  const databaseServiceMock = spyOnClass(DatabaseService);
   databaseServiceMock.getAllBunnies = jasmine.createSpy().and.returnValue(of([]));
 
   beforeEach(async(() => {
@@ -26,7 +26,7 @@ describe('HomeComponent', () => {
       declarations: [HomeComponent],
       providers: [{
         provide: DatabaseService, useValue: databaseServiceMock,
-      },{
+      }, {
         provide: MatSnackBar, useValue: spyOnClass(MatSnackBar)
       }]
     }).compileComponents();

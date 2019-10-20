@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   }
 
   public pickBunny(optionSelected: MatAutocompleteSelectedEvent) {
-    let bunny = optionSelected.option.id;
+    const bunny = optionSelected.option.id;
   }
 
   ngOnInit(): void {

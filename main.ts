@@ -10,7 +10,7 @@ import SQL from 'sql-template-strings';
 import IPC_EVENT from './src/app/ipcEvents';
 import GENDER from './src/app/entities/Gender';
 import { Observable, of, throwError } from 'rxjs';
-import { rescueTypeOption } from './src/app/components/add-bunny/add-bunny.component';
+import { RescueTypeOption } from './src/app/components/add-bunny/add-bunny.component';
 import { catchError } from 'rxjs/operators';
 import RESCUE_TYPE from './src/app/entities/RescueType';
 
@@ -167,7 +167,7 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.getBunnies, async (event: any) => {
     try {
       log.info(`Processing ${IPC_EVENT.getBunnies} event from electron thread`);
-      let newVar: Bunny[] = await database.all<Bunny>(SQL`SELECT * FROM bunnies`);
+      const newVar: Bunny[] = await database.all<Bunny>(SQL`SELECT * FROM bunnies`);
       log.info(`Found ${newVar.length} bunnies`);
       event.returnValue = newVar;
     } catch (err) {
@@ -178,7 +178,7 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.addBunny, async (event: any, bunny: Bunny) => {
     try {
       log.info(`Processing ${IPC_EVENT.addBunny} event from electron thread with name ${bunny.name}`);
-      let statement = await database.run(SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS')})`);
+      const statement = await database.run(SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS')})`);
       bunny.id = statement.lastID;
       event.returnValue = bunny;
     } catch (err) {

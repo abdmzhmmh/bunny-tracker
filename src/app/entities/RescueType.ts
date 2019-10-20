@@ -2,7 +2,7 @@ enum RESCUE_TYPE {
   owner = 'Owner',
   gs = 'GS',
   outside = 'Outside',
-  dropOff ='Drop off',
+  dropOff = 'Drop off',
   shelterTransfer = 'Shelter transfer',
   bornInRescue = 'Born in Rescue',
 }

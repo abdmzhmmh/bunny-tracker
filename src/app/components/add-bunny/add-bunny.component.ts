@@ -7,12 +7,12 @@ import Bunny from '../../entities/Bunny';
 import GENDER from '../../entities/Gender';
 import RESCUE_TYPE from '../../entities/RescueType';
 
-export interface genderOption {
-  value: GENDER
+export interface GenderOption {
+  value: GENDER;
 }
 
-export interface rescueTypeOption {
-  value: RESCUE_TYPE
+export interface RescueTypeOption {
+  value: RESCUE_TYPE;
 }
 
 @Component({
@@ -25,8 +25,8 @@ export class AddBunnyComponent implements OnInit {
   generalMinDate = moment().subtract(15, 'years');
   todaysDate = moment();
 
-  allRescueTypes: rescueTypeOption[];
-  allGenders: genderOption[];
+  allRescueTypes: RescueTypeOption[];
+  allGenders: GenderOption[];
 
   data = new FormGroup({
     name: new FormControl(''),
@@ -42,12 +42,12 @@ export class AddBunnyComponent implements OnInit {
 
   constructor(private databaseService: DatabaseService, private snackBar: MatSnackBar) {
     databaseService.getGenders().subscribe({
-      next: (genders: genderOption[]) => {
+      next: (genders: GenderOption[]) => {
         this.allGenders = genders;
       }
     });
     databaseService.getRescueTypes().subscribe({
-      next: (rescueTypeOptions: rescueTypeOption[]) => {
+      next: (rescueTypeOptions: RescueTypeOption[]) => {
         this.allRescueTypes = rescueTypeOptions;
       }
     });
@@ -77,7 +77,7 @@ export class AddBunnyComponent implements OnInit {
           panelClass: 'snackbar-message-success'
         });
         this.data.reset();
-        this.data.get("intakeDate").setValue(moment());
+        this.data.get('intakeDate').setValue(moment());
       },
       error: (error: any) => {
         this.snackBar.open(`Failure occurred while trying to save bunny. Error was ${error}`, 'Dismiss', {

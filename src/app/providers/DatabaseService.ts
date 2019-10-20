@@ -4,14 +4,14 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of, throwError } from 'rxjs';
 import Bunny from '../entities/Bunny';
 import IPC_EVENT from '../ipcEvents';
-import { genderOption, rescueTypeOption } from '../components/add-bunny/add-bunny.component';
+import { GenderOption, RescueTypeOption } from '../components/add-bunny/add-bunny.component';
 
 @Injectable()
 export class DatabaseService {
   constructor(private electronService: ElectronService) {}
 
-  rescueTypesCache: rescueTypeOption[];
-  genderTypesCache: genderOption[];
+  rescueTypesCache: RescueTypeOption[];
+  genderTypesCache: GenderOption[];
 
   getBunny(id: number): Observable<Bunny> {
     return of(this.electronService.ipcRenderer.sendSync(IPC_EVENT.getBunny, id)).pipe(
@@ -31,24 +31,24 @@ export class DatabaseService {
     ).pipe(catchError((error: any) => throwError(error.json)));
   }
 
-  getGenders(): Observable<genderOption[]> {
+  getGenders(): Observable<GenderOption[]> {
     if (!this.genderTypesCache) {
-      let observable = of(
+      const observable = of(
         this.electronService.ipcRenderer.sendSync(IPC_EVENT.getGenders)
       ).pipe(catchError((error: any) => throwError(error.json)));
-      observable.subscribe({next: (value: genderOption[]) => {this.genderTypesCache = value}});
+      observable.subscribe({next: (value: GenderOption[]) => {this.genderTypesCache = value; }});
       return observable;
     } else {
       return of(this.genderTypesCache);
     }
   }
 
-  getRescueTypes(): Observable<rescueTypeOption[]> {
+  getRescueTypes(): Observable<RescueTypeOption[]> {
     if (!this.rescueTypesCache) {
-      let observable = of(
+      const observable = of(
         this.electronService.ipcRenderer.sendSync(IPC_EVENT.getRescueTypes)
       ).pipe(catchError((error: any) => throwError(error.json)));
-      observable.subscribe({next: (value: rescueTypeOption[]) => {this.rescueTypesCache = value}});
+      observable.subscribe({next: (value: RescueTypeOption[]) => {this.rescueTypesCache = value; }});
       return observable;
     } else {
       return of(this.rescueTypesCache);

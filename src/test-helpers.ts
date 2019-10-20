@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+const jasmine = require('jasmine');
 
 export default function spyOnClass<T>(spiedClass: Type<T>) {
   const prototype = spiedClass.prototype;
