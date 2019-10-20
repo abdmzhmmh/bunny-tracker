@@ -1,7 +1,9 @@
 enum IPC_EVENT {
-  getBunny = 'GET-BUNNY',
+  getRescueTypes = 'GET-RESCUE-TYPES',
+  getGenders = 'GET-GENDERS',
+  getBunny = 'GET-BUNNY-BY-ID',
+  getBunnies = 'GET-ALL-BUNNIES',
   addBunny = 'ADD-BUNNY',
-  deleteBunny = 'DELETE-BUNNY',
 }
 
 export default IPC_EVENT;

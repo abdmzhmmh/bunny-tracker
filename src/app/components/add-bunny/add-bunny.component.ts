@@ -1,6 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, FormGroup } from '@angular/forms';
 import * as moment from 'moment';
+import { DatabaseService } from '../../providers/DatabaseService';
+import Bunny from '../../entities/Bunny';
+import GENDER from '../../entities/Gender';
+import RESCUE_TYPE from '../../entities/RescueType';
+
+export interface genderOption {
+  value: GENDER
+}
+
+export interface rescueTypeOption {
+  value: RESCUE_TYPE
+}
 
 @Component({
   selector: 'app-add-bunny',
@@ -12,8 +25,8 @@ export class AddBunnyComponent implements OnInit {
   generalMinDate = moment().subtract(15, 'years');
   todaysDate = moment();
 
-  allIntakeReasons = [{value: 'Owner'}, {value: 'GS'}, {value: 'Outside'}, {value: 'Drop off'}, {value: 'Shelter transfer'}, {value: 'Born in Rescue'}]; // TODO : Source this from the database
-  allGenders = [{value: 'Male'}, {value: 'Female'}]; // TODO : Source this from the database
+  allRescueTypes: rescueTypeOption[];
+  allGenders: genderOption[];
 
   data = new FormGroup({
     name: new FormControl(''),
@@ -23,11 +36,21 @@ export class AddBunnyComponent implements OnInit {
     description: new FormControl(''),
     spayDate: new FormControl(),
     dateOfBirth: new FormControl(),
-    intakeReason: new FormControl()
+    intakeReason: new FormControl(''),
+    rescueType: new FormControl()
   });
 
-  constructor() {
-
+  constructor(private databaseService: DatabaseService, private snackBar: MatSnackBar) {
+    databaseService.getGenders().subscribe({
+      next: (genders: genderOption[]) => {
+        this.allGenders = genders;
+      }
+    });
+    databaseService.getRescueTypes().subscribe({
+      next: (rescueTypeOptions: rescueTypeOption[]) => {
+        this.allRescueTypes = rescueTypeOptions;
+      }
+    });
   }
 
   ngOnInit() {
@@ -35,7 +58,33 @@ export class AddBunnyComponent implements OnInit {
   }
 
   onSubmit() {
-    alert(JSON.stringify(this.data.value));
+    this.databaseService.addBunny(new Bunny(
+      this.data.value.name,
+      this.data.value.gender.value,
+      moment(this.data.value.intakeDate).toDate(),
+      this.data.value.rescueType.value,
+      this.data.value.intakeReason,
+      undefined,
+      this.data.value.surrenderName,
+      moment(this.data.value.dateOfBirth).toDate(),
+      this.data.value.description,
+      moment(this.data.value.spayDate).toDate()
+      )
+    ).subscribe({
+      next: (value: Bunny) => {
+        this.snackBar.open(`The bunny ${value.name} saved successfully!`, undefined, {
+          duration: 2000,
+          panelClass: 'snackbar-message-success'
+        });
+        this.data.reset();
+        this.data.get("intakeDate").setValue(moment());
+      },
+      error: (error: any) => {
+        this.snackBar.open(`Failure occurred while trying to save bunny. Error was ${error}`, 'Dismiss', {
+          panelClass: 'snackbar-message-failure'
+        });
+      }
+    });
   }
 
 }

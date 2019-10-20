@@ -27,8 +27,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatButtonModule, MatIconModule, MatDatepickerModule} from '@angular/material';
+import { MatButtonModule, MatIconModule, MatDatepickerModule } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -61,7 +62,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatButtonModule,
     ReactiveFormsModule,
     MatDatepickerModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    MatSnackBarModule
   ],
   providers: [DatabaseService, ElectronService],
   bootstrap: [AppComponent]

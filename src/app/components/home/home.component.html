@@ -1,3 +1,12 @@
-<div class="container">
-  <h1 class="title">Search for Bunnies</h1>
-</div>
+<h1 class="title">Search for Bunnies</h1>
+<form>
+  <mat-form-field>
+    <input type="text" placeholder="Find a bunny" aria-label="Number" matInput [formControl]="autoSuggest"
+           [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="pickBunny($event)">
+      <mat-option *ngFor="let bunny of filteredBunnies | async" [value]="bunny.name" [id]="bunny.id">
+        {{bunny.name}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>

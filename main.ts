@@ -1,10 +1,18 @@
 import { app, BrowserWindow, ipcMain, Menu, MenuItem, MenuItemConstructorOptions, screen, shell } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import Bunny from './src/app/entities/bunny.schema';
+import * as moment from 'moment';
+import Bunny from './src/app/entities/Bunny';
 import * as sqlite from 'sqlite';
 import { Database } from 'sqlite';
 import * as log from 'electron-log';
+import SQL from 'sql-template-strings';
+import IPC_EVENT from './src/app/ipcEvents';
+import GENDER from './src/app/entities/Gender';
+import { Observable, of, throwError } from 'rxjs';
+import { rescueTypeOption } from './src/app/components/add-bunny/add-bunny.component';
+import { catchError } from 'rxjs/operators';
+import RESCUE_TYPE from './src/app/entities/RescueType';
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
@@ -134,41 +142,63 @@ const createWindow = async () => {
   const migrationPath = path.join(__dirname, 'dist', 'assets', 'migrations');
   const databasePath = path.join(app.getPath('userData'), 'database.sqlite');
 
-  log.info('Logging paths START');
   log.info('__dirname path:' + __dirname);
   log.info('Migration path:' + migrationPath);
   log.info('Database path:' + databasePath);
-  log.info('Logging paths END');
 
   const database: Database = await sqlite.open(databasePath);
-  await database.run('PRAGMA foreign_keys = ON;');
+
   await database.migrate({
-    force: serve ? 'last' : undefined,
+    // force: serve ? 'last' : undefined,
     migrationsPath: serve ? 'src/assets/migrations' : path.join(__dirname, 'dist', 'assets', 'migrations')
   });
 
-  ipcMain.on('GET-BUNNY', async (event: any, ..._args: any[]) => {
+  await database.run('PRAGMA foreign_keys = ON;');
+
+  ipcMain.on(IPC_EVENT.getBunny, async (event: any, id: number) => {
     try {
-      log.info('Processing GET-BUNNY event from electron thread');
-      event.returnValue = await database.all('SELECT * FROM bunnies');
+      log.info(`Processing ${IPC_EVENT.getBunny} event from electron thread`);
+      event.returnValue = await database.get<Bunny>(SQL`SELECT * FROM bunnies WHERE id = ${id}`);
     } catch (err) {
       throw err;
     }
   });
 
-  ipcMain.on('ADD-BUNNY', async (event: any, bunny: Bunny) => {
+  ipcMain.on(IPC_EVENT.getBunnies, async (event: any) => {
     try {
-      log.info('Processing ADD-BUNNY event from electron thread');
-      event.returnValue = await database.all('SELECT * FROM bunnies');
+      log.info(`Processing ${IPC_EVENT.getBunnies} event from electron thread`);
+      let newVar: Bunny[] = await database.all<Bunny>(SQL`SELECT * FROM bunnies`);
+      log.info(`Found ${newVar.length} bunnies`);
+      event.returnValue = newVar;
     } catch (err) {
       throw err;
     }
   });
 
-  ipcMain.on('DELETE-BUNNY', async (event: any, bunny: Bunny) => {
+  ipcMain.on(IPC_EVENT.addBunny, async (event: any, bunny: Bunny) => {
     try {
-      log.info('Processing DELETE-BUNNY event from electron thread');
-      event.returnValue = await database.all('SELECT * FROM bunnies');
+      log.info(`Processing ${IPC_EVENT.addBunny} event from electron thread with name ${bunny.name}`);
+      let statement = await database.run(SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS')})`);
+      bunny.id = statement.lastID;
+      event.returnValue = bunny;
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  ipcMain.on(IPC_EVENT.getGenders, async (event: any) => {
+    try {
+      log.info(`Processing ${IPC_EVENT.getGenders} event from electron thread`);
+      event.returnValue = await database.all<GENDER>(SQL`SELECT * FROM Genders`);
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  ipcMain.on(IPC_EVENT.getRescueTypes, async (event: any) => {
+    try {
+      log.info(`Processing ${IPC_EVENT.getRescueTypes} event from electron thread`);
+      event.returnValue = await database.all<RESCUE_TYPE>(SQL`SELECT * FROM RescueTypes`);
     } catch (err) {
       throw err;
     }

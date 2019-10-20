@@ -1,48 +1,34 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HomeComponent } from './home.component';
 import { DatabaseService } from '../../providers/DatabaseService';
-import { Type } from '@angular/core';
-import Bunny from '../../entities/bunny.schema';
-import { EMPTY, Observable } from 'rxjs';
-
-function spyOnClass<T>(spiedClass: Type<T>) {
-  const prototype = spiedClass.prototype;
-
-  const methods = Object.getOwnPropertyNames(prototype)
-  // Object.getOwnPropertyDescriptor is required to filter functions
-    .map(name => [name, Object.getOwnPropertyDescriptor(prototype, name)])
-    .filter(([name, descriptor]) => {
-      // select only functions
-      return (descriptor as PropertyDescriptor).value instanceof Function;
-    })
-    .map(([name]) => name);
-  // return spy object
-  return jasmine.createSpyObj('spy', [...methods]);
-}
-
-class DatabaseServiceMock extends DatabaseService {
-  constructor() {
-    super(undefined);
-  }
-  addBunny(_bunny: Bunny): Observable<Bunny[]> {
-    return EMPTY;
-  }
-  deleteBunny(_bunny: Bunny): Observable<Bunny[]> {
-    return EMPTY;
-  }
-  getBunnies(): Observable<Bunny[]> {
-    return EMPTY;
-  }
-}
+import { of } from 'rxjs';
+import {
+  MatAutocompleteModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatSelectModule,
+  MatSnackBar,
+  MatSnackBarModule
+} from '@angular/material';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import spyOnClass from '../../../test-helpers';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let databaseServiceMock = spyOnClass(DatabaseService);
+  databaseServiceMock.getAllBunnies = jasmine.createSpy().and.returnValue(of([]));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ MatSnackBarModule, MatAutocompleteModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatSelectModule, MatInputModule, NoopAnimationsModule ],
       declarations: [HomeComponent],
-      providers: [{provide: DatabaseService, useClass: DatabaseServiceMock}]
+      providers: [{
+        provide: DatabaseService, useValue: databaseServiceMock,
+      },{
+        provide: MatSnackBar, useValue: spyOnClass(MatSnackBar)
+      }]
     }).compileComponents();
   }));
 

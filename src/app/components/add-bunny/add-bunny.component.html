@@ -35,12 +35,16 @@
     <mat-datepicker #dateOfBirthPicker></mat-datepicker>
   </mat-form-field>
   <mat-form-field>
-    <mat-label>Intake Reason</mat-label>
-    <mat-select required formControlName="intakeReason">
-      <mat-option *ngFor="let intakeReason of allIntakeReasons" [value]="intakeReason">
-        {{ intakeReason.value }}
+    <mat-label>Rescue Type</mat-label>
+    <mat-select required formControlName="rescueType">
+      <mat-option *ngFor="let rescueType of allRescueTypes" [value]="rescueType">
+        {{ rescueType.value }}
       </mat-option>
     </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Intake Reason</mat-label>
+    <input matInput type="text" formControlName="intakeReason"/>
   </mat-form-field>
   <div class="row" style="justify-content:center;margin-top:100px;">
     <button mat-raised-button color="accent" type="submit" [disabled]="!data.valid">Add New Bunny</button>
