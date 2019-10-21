@@ -9,9 +9,6 @@ import * as log from 'electron-log';
 import SQL from 'sql-template-strings';
 import IPC_EVENT from './src/app/ipcEvents';
 import GENDER from './src/app/entities/Gender';
-import { Observable, of, throwError } from 'rxjs';
-import { RescueTypeOption } from './src/app/components/add-bunny/add-bunny.component';
-import { catchError } from 'rxjs/operators';
 import RESCUE_TYPE from './src/app/entities/RescueType';
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
@@ -158,7 +155,9 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.getBunny, async (event: any, id: number) => {
     try {
       log.info(`Processing ${IPC_EVENT.getBunny} event from electron thread`);
-      event.returnValue = await database.get<Bunny>(SQL`SELECT * FROM bunnies WHERE id = ${id}`);
+      event.returnValue = await database.get<Bunny>(SQL`SELECT *
+                                                        FROM bunnies
+      WHERE id = ${id}`);
     } catch (err) {
       throw err;
     }
@@ -167,7 +166,8 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.getBunnies, async (event: any) => {
     try {
       log.info(`Processing ${IPC_EVENT.getBunnies} event from electron thread`);
-      const newVar: Bunny[] = await database.all<Bunny>(SQL`SELECT * FROM bunnies`);
+      const newVar: Bunny[] = await database.all<Bunny>(SQL`SELECT *
+                                                            FROM bunnies`);
       log.info(`Found ${newVar.length} bunnies`);
       event.returnValue = newVar;
     } catch (err) {
@@ -178,7 +178,26 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.addBunny, async (event: any, bunny: Bunny) => {
     try {
       log.info(`Processing ${IPC_EVENT.getBunny} event from electron thread with bunny name ${bunny.name}`);
-      const sqlStatement = SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate, intakeReason, surrenderName, dateOfBirth, description, spayDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.intakeReason}, ${bunny.surrenderName}, ${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.description}, ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null})`;
+      const sqlStatement = SQL`
+INSERT INTO
+bunnies(name,
+        gender,
+        rescueType,
+        intakeDate,
+        intakeReason,
+        surrenderName,
+        dateOfBirth,
+        description,
+        spayDate)
+VALUES (${bunny.name},
+        ${bunny.gender},
+        ${bunny.rescueType},
+        ${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
+        ${bunny.intakeReason},
+        ${bunny.surrenderName},
+        ${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
+        ${bunny.description},
+        ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null})`;
       log.info(`Running query ${sqlStatement.text}`);
       log.info(`Parameters ${sqlStatement.values}`);
       const statement = await database.run(sqlStatement);
@@ -193,7 +212,19 @@ const createWindow = async () => {
     log.info(bunny);
     try {
       log.info(`Processing ${IPC_EVENT.updateBunny} event from electron thread with bunny named ${bunny.name}`);
-       const statement = await database.run(SQL`UPDATE Bunnies SET name=${bunny.name}, gender=${bunny.gender}, rescueType=${bunny.rescueType}, intakeDate=${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, intakeReason=${bunny.intakeReason}, surrenderName=${bunny.surrenderName}, dateOfBirth=${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, description=${bunny.description}, spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null} WHERE Bunnies.id = ${bunny.id}`);
+      const statement = await database.run(SQL`
+UPDATE
+Bunnies SET
+  name=${bunny.name},
+  gender=${bunny.gender},
+  rescueType=${bunny.rescueType},
+  intakeDate=${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
+  intakeReason=${bunny.intakeReason},
+  surrenderName=${bunny.surrenderName},
+  dateOfBirth=${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
+  description=${bunny.description},
+  spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}
+WHERE Bunnies.id = ${bunny.id}`);
       event.returnValue = null;
     } catch (err) {
       throw err;
@@ -203,7 +234,8 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.getGenders, async (event: any) => {
     try {
       log.info(`Processing ${IPC_EVENT.getGenders} event from electron thread`);
-      event.returnValue = await database.all<GENDER>(SQL`SELECT * FROM Genders`);
+      event.returnValue = await database.all<GENDER>(SQL`SELECT *
+                                                         FROM Genders`);
     } catch (err) {
       throw err;
     }
@@ -212,7 +244,8 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.getRescueTypes, async (event: any) => {
     try {
       log.info(`Processing ${IPC_EVENT.getRescueTypes} event from electron thread`);
-      event.returnValue = await database.all<RESCUE_TYPE>(SQL`SELECT * FROM RescueTypes`);
+      event.returnValue = await database.all<RESCUE_TYPE>(SQL`SELECT *
+                                                              FROM RescueTypes`);
     } catch (err) {
       throw err;
     }
