@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
       return this.bunnies;
     }
 
-    let filterValue = bunnyName.toLowerCase();
+    const filterValue = bunnyName.toLowerCase();
 
     return this.bunnies.filter(bunny => bunny.name.toLowerCase().includes(filterValue));
   }

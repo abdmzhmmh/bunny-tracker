@@ -14,10 +14,10 @@ describe('bunny-tracker application', function () {
     browser = client as any;
   });
 
-  it('should display message saying Search for Bunnies', async function () {
-    const text = await browser.getText('app-home h1');
-    expect(text).to.equal('Search for Bunnies');
-  });
+  // it('should display message saying Search for Bunnies', async function () {
+  //   const text = await browser.getText('app-home h1');
+  //   expect(text).to.equal('Search for Bunnies');
+  // });
 
 
   it('creates initial windows', async function () {

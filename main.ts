@@ -178,7 +178,7 @@ const createWindow = async () => {
   ipcMain.on(IPC_EVENT.addBunny, async (event: any, bunny: Bunny) => {
     try {
       log.info(`Processing ${IPC_EVENT.getBunny} event from electron thread with bunny name ${bunny.name}`);
-      let sqlStatement = SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate, intakeReason, surrenderName, dateOfBirth, description, spayDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.intakeReason}, ${bunny.surrenderName}, ${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.description}, ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null})`;
+      const sqlStatement = SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate, intakeReason, surrenderName, dateOfBirth, description, spayDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.intakeReason}, ${bunny.surrenderName}, ${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.description}, ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null})`;
       log.info(`Running query ${sqlStatement.text}`);
       log.info(`Parameters ${sqlStatement.values}`);
       const statement = await database.run(sqlStatement);
