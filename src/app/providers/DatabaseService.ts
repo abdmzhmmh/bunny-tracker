@@ -6,7 +6,9 @@ import Bunny from '../entities/Bunny';
 import IPC_EVENT from '../ipcEvents';
 import { GenderOption, RescueTypeOption } from '../components/add-bunny/add-bunny.component';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class DatabaseService {
   constructor(private electronService: ElectronService) {}
 
@@ -28,6 +30,12 @@ export class DatabaseService {
   addBunny(bunny: Bunny): Observable<Bunny> {
     return of(
       this.electronService.ipcRenderer.sendSync(IPC_EVENT.addBunny, bunny)
+    ).pipe(catchError((error: any) => throwError(error.json)));
+  }
+
+  updateBunny(bunny: Bunny): Observable<void> {
+    return of(
+      this.electronService.ipcRenderer.sendSync(IPC_EVENT.updateBunny, bunny)
     ).pipe(catchError((error: any) => throwError(error.json)));
   }
 

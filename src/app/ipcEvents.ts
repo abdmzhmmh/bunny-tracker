@@ -1,4 +1,5 @@
 enum IPC_EVENT {
+  updateBunny = 'UPDATE-BUNNY',
   getRescueTypes = 'GET-RESCUE-TYPES',
   getGenders = 'GET-GENDERS',
   getBunny = 'GET-BUNNY-BY-ID',

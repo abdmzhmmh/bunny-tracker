@@ -30,6 +30,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule, MatIconModule, MatDatepickerModule } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AlertService } from './providers/AlertService';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatMomentDateModule,
     MatSnackBarModule
   ],
-  providers: [DatabaseService, ElectronService],
+  providers: [DatabaseService, ElectronService, AlertService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

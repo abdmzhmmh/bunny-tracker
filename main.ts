@@ -177,10 +177,24 @@ const createWindow = async () => {
 
   ipcMain.on(IPC_EVENT.addBunny, async (event: any, bunny: Bunny) => {
     try {
-      log.info(`Processing ${IPC_EVENT.addBunny} event from electron thread with name ${bunny.name}`);
-      const statement = await database.run(SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS')})`);
+      log.info(`Processing ${IPC_EVENT.getBunny} event from electron thread with bunny name ${bunny.name}`);
+      let sqlStatement = SQL`INSERT INTO bunnies (name, gender, rescueType, intakeDate, intakeReason, surrenderName, dateOfBirth, description, spayDate) VALUES(${bunny.name}, ${bunny.gender}, ${bunny.rescueType}, ${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.intakeReason}, ${bunny.surrenderName}, ${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, ${bunny.description}, ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null})`;
+      log.info(`Running query ${sqlStatement.text}`);
+      log.info(`Parameters ${sqlStatement.values}`);
+      const statement = await database.run(sqlStatement);
       bunny.id = statement.lastID;
       event.returnValue = bunny;
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  ipcMain.on(IPC_EVENT.updateBunny, async (event: any, bunny: Bunny) => {
+    log.info(bunny);
+    try {
+      log.info(`Processing ${IPC_EVENT.updateBunny} event from electron thread with bunny named ${bunny.name}`);
+       const statement = await database.run(SQL`UPDATE Bunnies SET name=${bunny.name}, gender=${bunny.gender}, rescueType=${bunny.rescueType}, intakeDate=${bunny.intakeDate ? moment(bunny.intakeDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, intakeReason=${bunny.intakeReason}, surrenderName=${bunny.surrenderName}, dateOfBirth=${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null}, description=${bunny.description}, spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null} WHERE Bunnies.id = ${bunny.id}`);
+      event.returnValue = null;
     } catch (err) {
       throw err;
     }
