@@ -145,6 +145,8 @@ const createWindow = async () => {
 
   const database: Database = await sqlite.open(databasePath);
 
+  log.info(`Am I in dev mode? ${serve}`)
+
   await database.migrate({
     // force: serve ? 'last' : undefined,
     migrationsPath: serve ? 'src/assets/migrations' : path.join(__dirname, 'dist', 'assets', 'migrations')
