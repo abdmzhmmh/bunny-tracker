@@ -8,6 +8,7 @@ import { map, startWith } from 'rxjs/operators';
 import { GenderOption, RescueTypeOption } from '../add-bunny/add-bunny.component';
 import * as moment from 'moment';
 import { AlertService } from '../../providers/AlertService';
+import { emptyStringOrNull, translateDateToMoment, undefinedOrNull } from '../../functions';
 
 @Component({
   selector: 'app-home',
@@ -49,12 +50,13 @@ export class HomeComponent implements OnInit {
       name: new FormControl(this.selectedBunny.name),
       surrenderName: new FormControl(this.selectedBunny.surrenderName),
       gender: new FormControl(this.selectedBunny.gender),
-      intakeDate: new FormControl(this.selectedBunny.intakeDate ? moment(this.selectedBunny.intakeDate, 'YYYY/MM/DD HH:mm:ss.SSS') : null),
+      intakeDate: new FormControl(translateDateToMoment(this.selectedBunny.intakeDate)),
       description: new FormControl(this.selectedBunny.description),
-      spayDate: new FormControl(this.selectedBunny.spayDate ? moment(this.selectedBunny.spayDate, 'YYYY/MM/DD HH:mm:ss.SSS') : null),
-      dateOfBirth: new FormControl(this.selectedBunny.dateOfBirth ? moment(this.selectedBunny.dateOfBirth, 'YYYY/MM/DD HH:mm:ss.SSS') : null),
+      spayDate: new FormControl(translateDateToMoment(this.selectedBunny.spayDate)),
+      dateOfBirth: new FormControl(translateDateToMoment(this.selectedBunny.dateOfBirth)),
       intakeReason: new FormControl(this.selectedBunny.intakeReason),
       rescueType: new FormControl(this.selectedBunny.rescueType),
+      passedAwayDate: new FormControl(translateDateToMoment(this.selectedBunny.passedAwayDate)),
     });
   }
 
@@ -120,30 +122,24 @@ export class HomeComponent implements OnInit {
       this.areNondatesUnequal('surrenderName') ||
       this.areDatesUnequal('dateOfBirth') ||
       this.areNondatesUnequal('description') ||
-      this.areDatesUnequal('spayDate');
+      this.areDatesUnequal('spayDate') ||
+      this.areDatesUnequal('passedAwayDate');
   }
 
   private areDatesUnequal(value: string) {
-    if (this.undefinedOrNull(this.selectedBunny[value]) && this.undefinedOrNull(this.data.controls[value].value)) {
+    if (undefinedOrNull(this.selectedBunny[value]) && undefinedOrNull(this.data.controls[value].value)) {
       return false;
-    } else if (this.undefinedOrNull(this.data.controls[value].value)) {
+    } else if (undefinedOrNull(this.data.controls[value].value)) {
       return true;
     }
     return this.selectedBunny[value] !== this.data.controls[value].value.format('YYYY/MM/DD HH:mm:ss.SSS');
   }
 
   private areNondatesUnequal(value: string) {
-    if (this.emptyStringOrNull(this.selectedBunny[value]) && this.emptyStringOrNull(this.data.controls[value].value)) {
+    if (emptyStringOrNull(this.selectedBunny[value]) && emptyStringOrNull(this.data.controls[value].value)) {
       return false;
     }
     return this.selectedBunny[value] !== this.data.controls[value].value;
   }
 
-  private undefinedOrNull(variable?) {
-    return variable === null || variable === undefined;
-  }
-
-  private emptyStringOrNull(variable?: string) {
-    return variable === null || variable === '';
-  }
 }

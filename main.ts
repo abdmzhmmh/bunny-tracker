@@ -145,7 +145,7 @@ const createWindow = async () => {
 
   const database: Database = await sqlite.open(databasePath);
 
-  log.info(`Am I in dev mode? ${serve}`)
+  log.info(`Am I in dev mode? ${serve}`);
 
   await database.migrate({
     // force: serve ? 'last' : undefined,
@@ -225,7 +225,8 @@ Bunnies SET
   surrenderName=${bunny.surrenderName},
   dateOfBirth=${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
   description=${bunny.description},
-  spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}
+  spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
+  passedAwayDate=${bunny.passedAwayDate ? moment(bunny.passedAwayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}
 WHERE Bunnies.id = ${bunny.id}`);
       event.returnValue = null;
     } catch (err) {
