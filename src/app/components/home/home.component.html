@@ -61,15 +61,23 @@
   <mat-form-field style="width:50% !important">
     <mat-label>Intake Reason</mat-label>
     <textarea matInput
-              formControlName="description"
+              formControlName="intakeReason"
               cdkTextareaAutosize
               cdkAutosizeMinRows="1"
               cdkAutosizeMaxRows="10"></textarea>
   </mat-form-field>
-  <mat-form-field>
+  <mat-form-field #passedAwayDateField>
     <input matInput [matDatepicker]="passedAwayDate" [min]="generalMinDate" [max]="todaysDate" placeholder="Passed away date" formControlName="passedAwayDate">
     <mat-datepicker-toggle matSuffix [for]="passedAwayDate"></mat-datepicker-toggle>
     <mat-datepicker #passedAwayDate></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field *ngIf="passedAwayDate._selected" style="width:50% !important">
+    <mat-label>Passed Away Reason</mat-label>
+    <textarea matInput
+              formControlName="passedAwayReason"
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="10"></textarea>
   </mat-form-field>
   <div class="row" style="justify-content:center;margin-top:0px;">
     <button mat-raised-button color="accent" type="submit" [disabled]="!valid() || !data.valid">Save Bunny Details</button>

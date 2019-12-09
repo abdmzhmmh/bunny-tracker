@@ -57,6 +57,7 @@ export class HomeComponent implements OnInit {
       intakeReason: new FormControl(this.selectedBunny.intakeReason),
       rescueType: new FormControl(this.selectedBunny.rescueType),
       passedAwayDate: new FormControl(translateDateToMoment(this.selectedBunny.passedAwayDate)),
+      passedAwayReason: new FormControl(this.selectedBunny.passedAwayReason),
     });
   }
 
@@ -123,7 +124,8 @@ export class HomeComponent implements OnInit {
       this.areDatesUnequal('dateOfBirth') ||
       this.areNondatesUnequal('description') ||
       this.areDatesUnequal('spayDate') ||
-      this.areDatesUnequal('passedAwayDate');
+      this.areDatesUnequal('passedAwayDate') ||
+      this.areNondatesUnequal('passedAwayReason');
   }
 
   private areDatesUnequal(value: string) {

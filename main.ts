@@ -226,7 +226,8 @@ Bunnies SET
   dateOfBirth=${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
   description=${bunny.description},
   spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
-  passedAwayDate=${bunny.passedAwayDate ? moment(bunny.passedAwayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null}
+  passedAwayDate=${bunny.passedAwayDate ? moment(bunny.passedAwayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
+  passedAwayReason=${bunny.passedAwayReason}
 WHERE Bunnies.id = ${bunny.id}`);
       event.returnValue = null;
     } catch (err) {

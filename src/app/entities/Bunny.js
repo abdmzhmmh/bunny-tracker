@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var moment = require("moment");
 var Bunny = /** @class */ (function () {
-    function Bunny(name, gender, intakeDate, rescueType, intakeReason, id, surrenderName, dateOfBirth, description, spayDate, passedAwayDate) {
+    function Bunny(name, gender, intakeDate, rescueType, intakeReason, id, surrenderName, dateOfBirth, description, spayDate, passedAwayDate, passedAwayReason) {
         this.name = name;
         this.gender = gender;
         this.intakeDate = intakeDate;
@@ -14,9 +14,10 @@ var Bunny = /** @class */ (function () {
         this.description = description;
         this.spayDate = spayDate;
         this.passedAwayDate = passedAwayDate;
+        this.passedAwayReason = passedAwayReason;
     }
     Bunny.from = function (formGroup, id) {
-        return new Bunny(formGroup.controls.name.value, formGroup.controls.gender.value, formGroup.controls.intakeDate.value ? moment(formGroup.controls.intakeDate.value).startOf('day').toDate() : null, formGroup.controls.rescueType.value, formGroup.controls.intakeReason.value, id, formGroup.controls.surrenderName.value, formGroup.controls.dateOfBirth.value ? moment(formGroup.controls.dateOfBirth.value).startOf('day').toDate() : null, formGroup.controls.description.value, formGroup.controls.spayDate.value ? moment(formGroup.controls.spayDate.value).startOf('day').toDate() : null, formGroup.controls.passedAwayDate.value ? moment(formGroup.controls.passedAwayDate.value).startOf('day').toDate() : null);
+        return new Bunny(formGroup.controls.name.value, formGroup.controls.gender.value, formGroup.controls.intakeDate.value ? moment(formGroup.controls.intakeDate.value).startOf('day').toDate() : null, formGroup.controls.rescueType.value, formGroup.controls.intakeReason.value, id, formGroup.controls.surrenderName.value, formGroup.controls.dateOfBirth.value ? moment(formGroup.controls.dateOfBirth.value).startOf('day').toDate() : null, formGroup.controls.description.value, formGroup.controls.spayDate.value ? moment(formGroup.controls.spayDate.value).startOf('day').toDate() : null, formGroup.controls.passedAwayDate.value ? moment(formGroup.controls.passedAwayDate.value).startOf('day').toDate() : null, formGroup.controls.passedAwayReason.value);
     };
     return Bunny;
 }());

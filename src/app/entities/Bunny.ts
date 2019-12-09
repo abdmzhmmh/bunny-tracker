@@ -15,7 +15,8 @@ export default class Bunny {
     public dateOfBirth?: Date,
     public description?: string,
     public spayDate?: Date,
-    public passedAwayDate?: Date
+    public passedAwayDate?: Date,
+    public passedAwayReason?: string
   ) {
 
   }
@@ -32,7 +33,8 @@ export default class Bunny {
       formGroup.controls.dateOfBirth.value ? moment(formGroup.controls.dateOfBirth.value).startOf('day').toDate() : null,
       formGroup.controls.description.value,
       formGroup.controls.spayDate.value ? moment(formGroup.controls.spayDate.value).startOf('day').toDate() : null,
-      formGroup.controls.passedAwayDate.value ? moment(formGroup.controls.passedAwayDate.value).startOf('day').toDate() : null
+      formGroup.controls.passedAwayDate.value ? moment(formGroup.controls.passedAwayDate.value).startOf('day').toDate() : null,
+      formGroup.controls.passedAwayReason.value
     );
   }
 }
