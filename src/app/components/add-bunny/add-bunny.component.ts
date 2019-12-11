@@ -6,6 +6,7 @@ import Bunny from '../../entities/Bunny';
 import GENDER from '../../entities/Gender';
 import RESCUE_TYPE from '../../entities/RescueType';
 import { AlertService } from '../../providers/AlertService';
+import DATE_OF_BIRTH_EXPLANATION from '../../entities/DateOfBirthExplanation';
 
 export interface GenderOption {
   value: GENDER;
@@ -13,6 +14,10 @@ export interface GenderOption {
 
 export interface RescueTypeOption {
   value: RESCUE_TYPE;
+}
+
+export interface DateOfBirthExplanationOption {
+  value: DATE_OF_BIRTH_EXPLANATION;
 }
 
 @Component({
@@ -27,6 +32,7 @@ export class AddBunnyComponent implements OnInit {
 
   allRescueTypes: RescueTypeOption[];
   allGenders: GenderOption[];
+  allDateOfBirthExplanations: DateOfBirthExplanationOption[];
 
   data = new FormGroup({
     name: new FormControl(''),
@@ -37,13 +43,19 @@ export class AddBunnyComponent implements OnInit {
     spayDate: new FormControl(),
     dateOfBirth: new FormControl(),
     intakeReason: new FormControl(''),
-    rescueType: new FormControl()
+    rescueType: new FormControl(),
+    dateOfBirthExplanation: new FormControl(),
   });
 
   constructor(private databaseService: DatabaseService, private alertService: AlertService) {
     databaseService.getGenders().subscribe({
       next: (genders: GenderOption[]) => {
         this.allGenders = genders;
+      }
+    });
+    databaseService.getDateOfBirthExplanations().subscribe({
+      next: (dateOfBirthExplanations: DateOfBirthExplanationOption[]) => {
+        this.allDateOfBirthExplanations = dateOfBirthExplanations;
       }
     });
     databaseService.getRescueTypes().subscribe({
@@ -58,19 +70,7 @@ export class AddBunnyComponent implements OnInit {
   }
 
   onSubmit() {
-    this.databaseService.addBunny(new Bunny(
-      this.data.value.name,
-      this.data.value.gender.value,
-      this.data.value.intakeDate ? moment(this.data.value.intakeDate).startOf('day').toDate() : null,
-      this.data.value.rescueType.value,
-      this.data.value.intakeReason,
-      undefined,
-      this.data.value.surrenderName,
-      this.data.value.dateOfBirth ? moment(this.data.value.dateOfBirth).startOf('day').toDate() : null,
-      this.data.value.description,
-      this.data.value.spayDate ? moment(this.data.value.spayDate).startOf('day').toDate() : null
-      )
-    ).subscribe({
+    this.databaseService.addBunny(Bunny.from(this.data, null)).subscribe({
       next: (value: Bunny) => {
         this.alertService.databaseSuccessSavingBunny(this.data.value.name);
         this.data.reset();

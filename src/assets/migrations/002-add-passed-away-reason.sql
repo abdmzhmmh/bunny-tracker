@@ -1,8 +1,19 @@
 -- Up
-ALTER TABLE Bunnies ADD COLUMN passedAwayReason TEXT
+ALTER TABLE Bunnies ADD COLUMN passedAwayReason TEXT;
+
+CREATE TABLE DateOfBirthExplanations
+(
+  value TEXT PRIMARY KEY NOT NULL
+);
+INSERT INTO DateOfBirthExplanations(value)
+VALUES ('Vet'),
+       ('Actual'),
+       ('Approximate');
+
+ALTER TABLE Bunnies ADD COLUMN dateOfBirthExplanation REFERENCES DateOfBirthExplanations (value);
 
 -- Down
-ALTER TABLE bunnies RENAME TO _bunnies_old;
+ALTER TABLE Bunnies RENAME TO _bunnies_old;
 CREATE TABLE Bunnies
 (
   id             INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,6 +29,9 @@ CREATE TABLE Bunnies
   passedAwayDate TEXT
 );
 
-INSERT INTO bunnies (id, name, surrenderName, gender, dateOfBirth, description, intakeDate, spayDate, rescueType, intakeReason, passedAwayDate)
+INSERT INTO Bunnies (id, name, surrenderName, gender, dateOfBirth, description, intakeDate, spayDate, rescueType, intakeReason, passedAwayDate)
 SELECT id, name, surrenderName, gender, dateOfBirth, description, intakeDate, spayDate, rescueType, intakeReason, passedAwayDate
 FROM _bunnies_old;
+
+DROP TABLE IF EXISTS _bunnies_old;
+DROP TABLE IF EXISTS DateOfBirthExplanations;

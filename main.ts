@@ -10,10 +10,18 @@ import SQL from 'sql-template-strings';
 import IPC_EVENT from './src/app/ipcEvents';
 import GENDER from './src/app/entities/Gender';
 import RESCUE_TYPE from './src/app/entities/RescueType';
+import DATE_OF_BIRTH_EXPLANATION from './src/app/entities/DateOfBirthExplanation';
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
 log.info('Application starting');
+
+process.on('uncaughtException', (error: Error) => {
+  log.error('Uncaught exception on the main thread.');
+  log.error(error);
+});
+
+
 let win, serve;
 const args = process.argv.slice(1);
 // This is basically a surrogate for 'dev' environment
@@ -129,6 +137,12 @@ const template: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
         }
       }
     ]
+  },
+  {
+    role: 'zoomin'
+  },
+  {
+    role: 'resetzoom'
   }
 ];
 
@@ -161,6 +175,7 @@ const createWindow = async () => {
                                                         FROM bunnies
       WHERE id = ${id}`);
     } catch (err) {
+      event.returnValue = err; // TODO: Fixup all the callers to deal with the return error correctly
       throw err;
     }
   });
@@ -173,6 +188,7 @@ const createWindow = async () => {
       log.info(`Found ${newVar.length} bunnies`);
       event.returnValue = newVar;
     } catch (err) {
+      event.returnValue = err;
       throw err;
     }
   });
@@ -190,7 +206,8 @@ bunnies(name,
         surrenderName,
         dateOfBirth,
         description,
-        spayDate)
+        spayDate,
+        dateOfBirthExplanation)
 VALUES (${bunny.name},
         ${bunny.gender},
         ${bunny.rescueType},
@@ -199,13 +216,15 @@ VALUES (${bunny.name},
         ${bunny.surrenderName},
         ${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
         ${bunny.description},
-        ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null})`;
+        ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
+        ${bunny.dateOfBirthExplanation})`;
       log.info(`Running query ${sqlStatement.text}`);
       log.info(`Parameters ${sqlStatement.values}`);
       const statement = await database.run(sqlStatement);
       bunny.id = statement.lastID;
       event.returnValue = bunny;
     } catch (err) {
+      event.returnValue = err;
       throw err;
     }
   });
@@ -227,10 +246,12 @@ Bunnies SET
   description=${bunny.description},
   spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
   passedAwayDate=${bunny.passedAwayDate ? moment(bunny.passedAwayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
-  passedAwayReason=${bunny.passedAwayReason}
+  passedAwayReason=${bunny.passedAwayReason},
+  dateOfBirthExplanation=${bunny.dateOfBirthExplanation}
 WHERE Bunnies.id = ${bunny.id}`);
       event.returnValue = null;
     } catch (err) {
+      event.returnValue = err;
       throw err;
     }
   });
@@ -241,6 +262,7 @@ WHERE Bunnies.id = ${bunny.id}`);
       event.returnValue = await database.all<GENDER>(SQL`SELECT *
                                                          FROM Genders`);
     } catch (err) {
+      event.returnValue = err;
       throw err;
     }
   });
@@ -251,6 +273,18 @@ WHERE Bunnies.id = ${bunny.id}`);
       event.returnValue = await database.all<RESCUE_TYPE>(SQL`SELECT *
                                                               FROM RescueTypes`);
     } catch (err) {
+      event.returnValue = err;
+      throw err;
+    }
+  });
+
+  ipcMain.on(IPC_EVENT.getDateOfBirthExplanationTypes, async (event: any) => {
+    try {
+      log.info(`Processing ${IPC_EVENT.getDateOfBirthExplanationTypes} event from electron thread`);
+      event.returnValue = await database.all<DATE_OF_BIRTH_EXPLANATION>(SQL`SELECT *
+                                                              FROM DateOfBirthExplanations`);
+    } catch (err) {
+      event.returnValue = err;
       throw err;
     }
   });

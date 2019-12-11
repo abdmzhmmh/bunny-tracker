@@ -4,7 +4,11 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of, throwError } from 'rxjs';
 import Bunny from '../entities/Bunny';
 import IPC_EVENT from '../ipcEvents';
-import { GenderOption, RescueTypeOption } from '../components/add-bunny/add-bunny.component';
+import {
+  DateOfBirthExplanationOption,
+  GenderOption,
+  RescueTypeOption
+} from '../components/add-bunny/add-bunny.component';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +16,9 @@ import { GenderOption, RescueTypeOption } from '../components/add-bunny/add-bunn
 export class DatabaseService {
   constructor(private electronService: ElectronService) {}
 
-  rescueTypesCache: RescueTypeOption[];
-  genderTypesCache: GenderOption[];
+  rescueTypeOptionsCache: RescueTypeOption[];
+  genderOptionsCache: GenderOption[];
+  dateOfBirthExplanationOptionsCache: DateOfBirthExplanationOption[];
 
   getBunny(id: number): Observable<Bunny> {
     return of(this.electronService.ipcRenderer.sendSync(IPC_EVENT.getBunny, id)).pipe(
@@ -40,26 +45,39 @@ export class DatabaseService {
   }
 
   getGenders(): Observable<GenderOption[]> {
-    if (!this.genderTypesCache) {
+    if (!this.genderOptionsCache) {
       const observable = of(
         this.electronService.ipcRenderer.sendSync(IPC_EVENT.getGenders)
       ).pipe(catchError((error: any) => throwError(error.json)));
-      observable.subscribe({next: (value: GenderOption[]) => {this.genderTypesCache = value; }});
+      observable.subscribe({next: (value: GenderOption[]) => { this.genderOptionsCache = value; }});
       return observable;
     } else {
-      return of(this.genderTypesCache);
+      return of(this.genderOptionsCache);
     }
   }
 
   getRescueTypes(): Observable<RescueTypeOption[]> {
-    if (!this.rescueTypesCache) {
+    if (!this.rescueTypeOptionsCache) {
       const observable = of(
         this.electronService.ipcRenderer.sendSync(IPC_EVENT.getRescueTypes)
       ).pipe(catchError((error: any) => throwError(error.json)));
-      observable.subscribe({next: (value: RescueTypeOption[]) => {this.rescueTypesCache = value; }});
+      observable.subscribe({next: (value: RescueTypeOption[]) => { this.rescueTypeOptionsCache = value; }});
       return observable;
     } else {
-      return of(this.rescueTypesCache);
+      return of(this.rescueTypeOptionsCache);
     }
   }
+
+  getDateOfBirthExplanations(): Observable<DateOfBirthExplanationOption[]> {
+    if (!this.dateOfBirthExplanationOptionsCache) {
+      const observable = of(
+        this.electronService.ipcRenderer.sendSync(IPC_EVENT.getDateOfBirthExplanationTypes)
+      ).pipe(catchError((error: any) => throwError(error.json)));
+      observable.subscribe({next: (value: DateOfBirthExplanationOption[]) => { this.dateOfBirthExplanationOptionsCache = value; }});
+      return observable;
+    } else {
+      return of(this.dateOfBirthExplanationOptionsCache);
+    }
+  }
+
 }

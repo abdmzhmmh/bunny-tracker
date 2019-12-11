@@ -5,7 +5,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { GenderOption, RescueTypeOption } from '../add-bunny/add-bunny.component';
+import { DateOfBirthExplanationOption, GenderOption, RescueTypeOption } from '../add-bunny/add-bunny.component';
 import * as moment from 'moment';
 import { AlertService } from '../../providers/AlertService';
 import { emptyStringOrNull, translateDateToMoment, undefinedOrNull } from '../../functions';
@@ -23,6 +23,7 @@ export class HomeComponent implements OnInit {
   selectedBunny: Bunny;
   data: FormGroup;
   allGenders: GenderOption[];
+  allDateOfBirthExplanations: DateOfBirthExplanationOption[];
   allRescueTypes: RescueTypeOption[];
   generalMinDate = moment().subtract(15, 'years').startOf('day');
   todaysDate = moment().startOf('day');
@@ -58,6 +59,7 @@ export class HomeComponent implements OnInit {
       rescueType: new FormControl(this.selectedBunny.rescueType),
       passedAwayDate: new FormControl(translateDateToMoment(this.selectedBunny.passedAwayDate)),
       passedAwayReason: new FormControl(this.selectedBunny.passedAwayReason),
+      dateOfBirthExplanation: new FormControl(this.selectedBunny.dateOfBirthExplanation),
     });
   }
 
@@ -92,6 +94,11 @@ export class HomeComponent implements OnInit {
     }, (error) => {
       this.alertService.databaseErrorFetching(error);
     });
+    this.databaseService.getDateOfBirthExplanations().subscribe({
+      next: (dateOfBirthExplanations: DateOfBirthExplanationOption[]) => {
+        this.allDateOfBirthExplanations = dateOfBirthExplanations;
+      }
+    });
     this.databaseService.getGenders().subscribe({
       next: (genders: GenderOption[]) => {
         this.allGenders = genders;
@@ -125,7 +132,8 @@ export class HomeComponent implements OnInit {
       this.areNondatesUnequal('description') ||
       this.areDatesUnequal('spayDate') ||
       this.areDatesUnequal('passedAwayDate') ||
-      this.areNondatesUnequal('passedAwayReason');
+      this.areNondatesUnequal('passedAwayReason') ||
+      this.areNondatesUnequal('dateOfBirthExplanation');
   }
 
   private areDatesUnequal(value: string) {
