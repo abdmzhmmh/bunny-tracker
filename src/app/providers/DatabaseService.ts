@@ -7,7 +7,7 @@ import IPC_EVENT from '../ipcEvents';
 import {
   DateOfBirthExplanationOption,
   GenderOption,
-  RescueTypeOption
+  RescueTypeOption, SpayExplanationOption
 } from '../components/add-bunny/add-bunny.component';
 
 @Injectable({
@@ -19,6 +19,7 @@ export class DatabaseService {
   rescueTypeOptionsCache: RescueTypeOption[];
   genderOptionsCache: GenderOption[];
   dateOfBirthExplanationOptionsCache: DateOfBirthExplanationOption[];
+  spayExplanationOptionsCache: SpayExplanationOption[];
 
   getBunny(id: number): Observable<Bunny> {
     return of(this.electronService.ipcRenderer.sendSync(IPC_EVENT.getBunny, id)).pipe(
@@ -77,6 +78,18 @@ export class DatabaseService {
       return observable;
     } else {
       return of(this.dateOfBirthExplanationOptionsCache);
+    }
+  }
+
+  getSpayExplanations(): Observable<SpayExplanationOption[]> {
+    if (!this.spayExplanationOptionsCache) {
+      const observable = of(
+        this.electronService.ipcRenderer.sendSync(IPC_EVENT.getSpayExplanationTypes)
+      ).pipe(catchError((error: any) => throwError(error.json)));
+      observable.subscribe({next: (value: SpayExplanationOption[]) => { this.spayExplanationOptionsCache = value; }});
+      return observable;
+    } else {
+      return of(this.spayExplanationOptionsCache);
     }
   }
 

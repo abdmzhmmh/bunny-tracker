@@ -11,6 +11,7 @@ import IPC_EVENT from './src/app/ipcEvents';
 import GENDER from './src/app/entities/Gender';
 import RESCUE_TYPE from './src/app/entities/RescueType';
 import DATE_OF_BIRTH_EXPLANATION from './src/app/entities/DateOfBirthExplanation';
+import SPAY_EXPLANATION from './src/app/entities/SpayExplanation';
 
 process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = '1';
 
@@ -207,7 +208,8 @@ bunnies(name,
         dateOfBirth,
         description,
         spayDate,
-        dateOfBirthExplanation)
+        dateOfBirthExplanation,
+        spayExplanation)
 VALUES (${bunny.name},
         ${bunny.gender},
         ${bunny.rescueType},
@@ -217,7 +219,8 @@ VALUES (${bunny.name},
         ${bunny.dateOfBirth ? moment(bunny.dateOfBirth).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
         ${bunny.description},
         ${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
-        ${bunny.dateOfBirthExplanation})`;
+        ${bunny.dateOfBirthExplanation},
+        ${bunny.spayExplanation})`;
       log.info(`Running query ${sqlStatement.text}`);
       log.info(`Parameters ${sqlStatement.values}`);
       const statement = await database.run(sqlStatement);
@@ -247,7 +250,8 @@ Bunnies SET
   spayDate=${bunny.spayDate ? moment(bunny.spayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
   passedAwayDate=${bunny.passedAwayDate ? moment(bunny.passedAwayDate).format('YYYY/MM/DD HH:mm:ss.SSS') : null},
   passedAwayReason=${bunny.passedAwayReason},
-  dateOfBirthExplanation=${bunny.dateOfBirthExplanation}
+  dateOfBirthExplanation=${bunny.dateOfBirthExplanation},
+  spayExplanation=${bunny.spayExplanation}
 WHERE Bunnies.id = ${bunny.id}`);
       event.returnValue = null;
     } catch (err) {
@@ -283,6 +287,17 @@ WHERE Bunnies.id = ${bunny.id}`);
       log.info(`Processing ${IPC_EVENT.getDateOfBirthExplanationTypes} event from electron thread`);
       event.returnValue = await database.all<DATE_OF_BIRTH_EXPLANATION>(SQL`SELECT *
                                                               FROM DateOfBirthExplanations`);
+    } catch (err) {
+      event.returnValue = err;
+      throw err;
+    }
+  });
+
+  ipcMain.on(IPC_EVENT.getSpayExplanationTypes, async (event: any) => {
+    try {
+      log.info(`Processing ${IPC_EVENT.getSpayExplanationTypes} event from electron thread`);
+      event.returnValue = await database.all<SPAY_EXPLANATION>(SQL`SELECT *
+                                                              FROM SpayExplanations`);
     } catch (err) {
       event.returnValue = err;
       throw err;

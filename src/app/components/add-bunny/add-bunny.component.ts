@@ -7,6 +7,7 @@ import GENDER from '../../entities/Gender';
 import RESCUE_TYPE from '../../entities/RescueType';
 import { AlertService } from '../../providers/AlertService';
 import DATE_OF_BIRTH_EXPLANATION from '../../entities/DateOfBirthExplanation';
+import SPAY_EXPLANATION from '../../entities/SpayExplanation';
 
 export interface GenderOption {
   value: GENDER;
@@ -18,6 +19,10 @@ export interface RescueTypeOption {
 
 export interface DateOfBirthExplanationOption {
   value: DATE_OF_BIRTH_EXPLANATION;
+}
+
+export interface SpayExplanationOption {
+  value: SPAY_EXPLANATION;
 }
 
 @Component({
@@ -33,6 +38,7 @@ export class AddBunnyComponent implements OnInit {
   allRescueTypes: RescueTypeOption[];
   allGenders: GenderOption[];
   allDateOfBirthExplanations: DateOfBirthExplanationOption[];
+  allSpayExplanations: SpayExplanationOption[];
 
   data = new FormGroup({
     name: new FormControl(''),
@@ -45,6 +51,7 @@ export class AddBunnyComponent implements OnInit {
     intakeReason: new FormControl(''),
     rescueType: new FormControl(),
     dateOfBirthExplanation: new FormControl(),
+    spayExplanation: new FormControl(),
   });
 
   constructor(private databaseService: DatabaseService, private alertService: AlertService) {
@@ -56,6 +63,11 @@ export class AddBunnyComponent implements OnInit {
     databaseService.getDateOfBirthExplanations().subscribe({
       next: (dateOfBirthExplanations: DateOfBirthExplanationOption[]) => {
         this.allDateOfBirthExplanations = dateOfBirthExplanations;
+      }
+    });
+    this.databaseService.getSpayExplanations().subscribe({
+      next: (spayExplanationOptions: SpayExplanationOption[]) => {
+        this.allSpayExplanations = spayExplanationOptions;
       }
     });
     databaseService.getRescueTypes().subscribe({

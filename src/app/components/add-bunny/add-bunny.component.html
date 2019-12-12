@@ -28,11 +28,22 @@
               cdkAutosizeMinRows="1"
               cdkAutosizeMaxRows="10"></textarea>
   </mat-form-field>
-  <mat-form-field>
-    <input matInput [matDatepicker]="spayPicker" [min]="generalMinDate" [max]="todaysDate" placeholder="{{genderSelection.selected != null ? genderSelection.selected.value === 'Male' ? 'Neuter' : 'Spay' : 'Spay or Neuter'}} date" formControlName="spayDate">
-    <mat-datepicker-toggle matSuffix [for]="spayPicker"></mat-datepicker-toggle>
-    <mat-datepicker #spayPicker></mat-datepicker>
-  </mat-form-field>
+  <div class="mat-form-field" style="margin-right:20px;">
+    <mat-form-field style="margin-right:0;">
+      <input matInput [matDatepicker]="spayPicker" [min]="generalMinDate" [max]="todaysDate" placeholder="{{genderSelection.selected?.value === 'Male' ? 'Neuter' : 'Spay'}} date" formControlName="spayDate">
+      <mat-datepicker-toggle matSuffix [for]="spayPicker"></mat-datepicker-toggle>
+      <mat-datepicker #spayPicker></mat-datepicker>
+    </mat-form-field>
+    <div style="position: relative;" [hidden]="!spayPicker._selected">
+      <mat-form-field style="position: absolute; margin-right:0; width:50%; transform: scale(.7) translate(165%, -220%)">
+        <mat-select required="{{spayPicker._selected ? true.toString() : false.toString()}}" formControlName="spayExplanation">
+          <mat-option *ngFor="let explanation of allSpayExplanations" [value]="explanation.value">
+            {{ explanation.value }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
   <div class="mat-form-field" style="margin-right:20px;">
     <mat-form-field style="margin-right:0;">
       <input matInput [matDatepicker]="dateOfBirthPicker" [min]="generalMinDate" [max]="todaysDate" placeholder="Date of birth" formControlName="dateOfBirth">

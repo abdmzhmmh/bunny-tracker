@@ -3,6 +3,7 @@ import RESCUE_TYPE from './RescueType';
 import { FormGroup } from '@angular/forms';
 import * as moment from 'moment';
 import DATE_OF_BIRTH_EXPLANATION from './DateOfBirthExplanation';
+import SPAY_EXPLANATION from './SpayExplanation';
 
 export default class Bunny {
   constructor(
@@ -19,6 +20,7 @@ export default class Bunny {
     public spayDate?: Date,
     public passedAwayDate?: Date,
     public passedAwayReason?: string,
+    public spayExplanation?: SPAY_EXPLANATION
   ) {
 
   }
@@ -38,6 +40,7 @@ export default class Bunny {
       formGroup.controls.spayDate.value ? moment(formGroup.controls.spayDate.value).startOf('day').toDate() : null,
       formGroup.controls.passedAwayDate ? (formGroup.controls.passedAwayDate.value ? moment(formGroup.controls.passedAwayDate.value).startOf('day').toDate() : null) : null,
       formGroup.controls.passedAwayReason ? (formGroup.controls.passedAwayReason.value) : null,
+      formGroup.controls.spayDate.value ? formGroup.controls.spayExplanation.value : null, // Ignore the value unless the date was set
     );
   }
 }
