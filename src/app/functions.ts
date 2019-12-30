@@ -8,6 +8,6 @@ export function undefinedOrNull(variable?) {
   return variable === null || variable === undefined;
 }
 
-export function emptyStringOrNull(variable?: string) {
-  return variable === null || variable === '';
+export function emptyStringOrNullOrUndefined(variable?: string) {
+  return variable === null || variable === undefined || variable === '';
 }

@@ -157,11 +157,9 @@ const createWindow = async () => {
   log.info('__dirname path:' + __dirname);
   log.info('Migration path:' + migrationPath);
   log.info('Database path:' + databasePath);
-
-  const database: Database = await sqlite.open(databasePath);
-
   log.info(`Am I in dev mode? ${serve}`);
 
+  const database: Database = await sqlite.open(databasePath);
   await database.migrate({
     // force: serve ? 'last' : undefined,
     migrationsPath: serve ? 'src/assets/migrations' : path.join(__dirname, 'dist', 'assets', 'migrations')
@@ -181,13 +179,49 @@ const createWindow = async () => {
     }
   });
 
+
+
   ipcMain.on(IPC_EVENT.getBunnies, async (event: any) => {
+    interface BondedBunnyReturnValues {
+      firstBunny: number,
+      secondBunny: number
+    }
+
+    type QueryResult = Bunny & BondedBunnyReturnValues;
     try {
       log.info(`Processing ${IPC_EVENT.getBunnies} event from electron thread`);
-      const newVar: Bunny[] = await database.all<Bunny>(SQL`SELECT *
-                                                            FROM bunnies`);
-      log.info(`Found ${newVar.length} bunnies`);
-      event.returnValue = newVar;
+
+      const queryResults: QueryResult[] = await database.all<QueryResult>(SQL`SELECT *
+                                                            FROM Bunnies
+                                                            LEFT OUTER JOIN BunnyBondedToBunny ON Bunnies.id = BunnyBondedToBunny.firstBunny OR Bunnies.id = BunnyBondedToBunny.secondBunny;
+      `);
+      // A bunny will appear in the answer set repeatedly if it's in a relationship with other bunnies.
+      // If bunny X has a relationship with Y and Z then it will appear in the output twice.
+      // We want to collapse these many rows into a single bunny javascript object with an array of ids pointing to the other bunnies
+      const consolidatedResults: Bunny[] = queryResults.reduce<Bunny[]>((results: Bunny[], currentValue: QueryResult, _currentIndex, array): Bunny[] => {
+        // Have I already recorded this bunny in the output array?
+        let possibleBunnyAlreadyInResults: Bunny | undefined = results.find((value: Bunny) => {
+          return value.id === currentValue.id;
+        });
+        if (possibleBunnyAlreadyInResults) {
+          // Add the bunny that isn't this bunny into the bondedBunnyIds
+          // For example you don't want bunny with id 5 to have bondedBunnyIds = [3, 10, 5] because that says its bonded to itself
+          if (currentValue.firstBunny) {
+            possibleBunnyAlreadyInResults.bondedBunnyIds.push(currentValue.firstBunny !== currentValue.id ? currentValue.firstBunny : currentValue.secondBunny);
+          }
+        } else {
+          if (currentValue.firstBunny !== null && currentValue.firstBunny !== undefined) {
+            currentValue.bondedBunnyIds = [currentValue.firstBunny !== currentValue.id ? currentValue.firstBunny : currentValue.secondBunny];
+          } else {
+            currentValue.bondedBunnyIds = [];
+          }
+          results.push(currentValue);
+        }
+        return results;
+      }, []);
+      log.info(`Found ${queryResults.length} bunnies`);
+      log.info(`Consolidated them to ${consolidatedResults.length} bunnies`);
+      event.returnValue = consolidatedResults;
     } catch (err) {
       event.returnValue = err;
       throw err;
@@ -233,10 +267,11 @@ VALUES (${bunny.name},
   });
 
   ipcMain.on(IPC_EVENT.updateBunny, async (event: any, bunny: Bunny) => {
+    log.info('Updating bunny with the following values');
     log.info(bunny);
     try {
       log.info(`Processing ${IPC_EVENT.updateBunny} event from electron thread with bunny named ${bunny.name}`);
-      const statement = await database.run(SQL`
+      await database.run(SQL`
 UPDATE
 Bunnies SET
   name=${bunny.name},
@@ -253,6 +288,28 @@ Bunnies SET
   dateOfBirthExplanation=${bunny.dateOfBirthExplanation},
   spayExplanation=${bunny.spayExplanation}
 WHERE Bunnies.id = ${bunny.id}`);
+
+      // Delete all relationships with this bunny
+      await database.run(SQL`
+DELETE FROM BunnyBondedToBunny
+WHERE BunnyBondedToBunny.firstBunny = ${bunny.id} OR
+      BunnyBondedToBunny.secondBunny = ${bunny.id}
+`);
+      // Reinsert all relationships with this bunny
+      if (bunny.bondedBunnyIds.length > 0) {
+        log.info('re-inserting relationships');
+        let sqlStatement = `
+INSERT INTO
+BunnyBondedToBunny(firstBunny,
+                   secondBunny)
+VALUES ${bunny.bondedBunnyIds.reduce((previousValue, currentValue, index, ids) => {
+          return `${previousValue}(${bunny.id}, ${currentValue})${ids.length - 1 === index ? '' : ', '}`;
+        }, '')}
+`;
+        log.info(`Running ${sqlStatement}`);
+        await database.run(sqlStatement);
+
+      }
       event.returnValue = null;
     } catch (err) {
       event.returnValue = err;

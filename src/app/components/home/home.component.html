@@ -1,14 +1,13 @@
 <form>
   <mat-form-field>
-    <input type="text" placeholder="Find a bunny" aria-label="Number" matInput [formControl]="autoSuggest"
+    <input type="text" placeholder="Find a bunny" aria-label="Number" matInput [formControl]="selectedBunnyAutoSuggest"
            [matAutocomplete]="auto">
     <mat-autocomplete [autoActiveFirstOption]="true" #auto="matAutocomplete" (optionSelected)="pickBunny($event)">
-      <mat-option *ngFor="let bunny of filteredBunnies | async" [value]="bunny.name" [id]="bunny.id">
-        {{bunny.name}}   {{bunny.intakeDate.slice(0, 4)}}
+      <mat-option *ngFor="let bunny of selectedBunnyAutoSuggestFilteredBunnies | async" [value]="bunny.name" [id]="bunny.id">
+        {{bunny.name}}   {{bunny.intakeDate.slice(0, 4) //noinspection UnresolvedFunction}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-
 </form>
 <form *ngIf="data" [formGroup]="data" (ngSubmit)="onSubmit()">
   <mat-form-field>
@@ -101,7 +100,22 @@
               cdkAutosizeMinRows="1"
               cdkAutosizeMaxRows="10"></textarea>
   </mat-form-field>
+  <mat-select-autocomplete id="bunnyBonds"
+                           [appearance]="standard"
+                           [placeholder]="'Bunny Bonds'"
+                           [selectPlaceholder]="'Bunny Bonds'"
+                           [options]="bunniesAvailableToBondOptions"
+                           [selectedOptions]="preselectedBondedBunnies"
+                           [display]="'display'"
+                           [value]="'value'"
+                           [multiple]='true'
+                           name="optionsSelector"
+                           ngDefaultControl
+                           [labelCount]="4"
+                           [formControl]="data.controls['bondedBunnies']"
+                           (selectionChange)="onSelectedBondsChanged($event)">
+  </mat-select-autocomplete>
   <div class="row" style="justify-content:center;margin-top:0px;">
-    <button mat-raised-button color="accent" type="submit" [disabled]="!valid() || !data.valid">Save Bunny Details</button>
+    <button mat-raised-button color="accent" type="submit" [disabled]="!(hasStateChanges() && data.valid)">Save Bunny Details</button>
   </div>
 </form>

@@ -27,10 +27,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatButtonModule, MatIconModule, MatDatepickerModule } from '@angular/material';
+import { MatButtonModule, MatDatepickerModule, MatIconModule } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from './providers/AlertService';
+import { SelectAutocompleteModule } from 'mat-select-autocomplete';
+import { TestComponent } from './components/test/test.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { AlertService } from './providers/AlertService';
     HomeComponent,
     WebviewDirective,
     NavbarComponent,
-    AddBunnyComponent
+    AddBunnyComponent,
+    TestComponent
   ],
   imports: [
     BrowserModule,
@@ -64,7 +67,8 @@ import { AlertService } from './providers/AlertService';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatMomentDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    SelectAutocompleteModule
   ],
   providers: [DatabaseService, ElectronService, AlertService],
   bootstrap: [AppComponent]

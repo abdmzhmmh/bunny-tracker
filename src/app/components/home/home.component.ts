@@ -13,7 +13,13 @@ import {
 } from '../add-bunny/add-bunny.component';
 import * as moment from 'moment';
 import { AlertService } from '../../providers/AlertService';
-import { emptyStringOrNull, translateDateToMoment, undefinedOrNull } from '../../functions';
+import { emptyStringOrNullOrUndefined, translateDateToMoment, undefinedOrNull } from '../../functions';
+
+import { isEqual } from 'lodash-es';
+
+export interface BunnyBondOption {
+  display: string, value: string;
+}
 
 @Component({
   selector: 'app-home',
@@ -21,17 +27,18 @@ import { emptyStringOrNull, translateDateToMoment, undefinedOrNull } from '../..
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-
-  autoSuggest = new FormControl();
+  bunniesAvailableToBondOptions: BunnyBondOption[] = [];
+  preselectedBondedBunnies: string[] = [];
   bunnies: Bunny[] = [];
-  filteredBunnies: Observable<Bunny[]>;
+  selectedBunnyAutoSuggest = new FormControl();
+  selectedBunnyAutoSuggestFilteredBunnies: Observable<Bunny[]>;
   selectedBunny: Bunny;
   data: FormGroup;
   allGenders: GenderOption[];
   allDateOfBirthExplanations: DateOfBirthExplanationOption[];
   allSpayExplanations: SpayExplanationOption[];
   allRescueTypes: RescueTypeOption[];
-  generalMinDate = moment().subtract(15, 'years').startOf('day');
+  generalMinDate = moment('2010-01-01 00:00:00.000');
   todaysDate = moment().startOf('day');
 
   constructor(private databaseService: DatabaseService, private alertService: AlertService) {
@@ -48,9 +55,29 @@ export class HomeComponent implements OnInit {
     return this.bunnies.filter(bunny => bunny.name.toLowerCase().includes(filterValue));
   }
 
+  public onSelectedBondsChanged(optionSelected: any) {
+    console.log(optionSelected);
+  }
+
   public pickBunny(optionSelected: MatAutocompleteSelectedEvent) {
+    console.log('Bunny picked!');
     this.selectedBunny = this.bunnies.find((value: Bunny) => {
       return value.id === +optionSelected.option.id;
+    });
+
+    this.preselectedBondedBunnies = this.selectedBunny.bondedBunnyIds.map<string>(value => value.toString(10));
+
+    this.bunniesAvailableToBondOptions = this.bunnies.reduce((previousValue: Bunny[], currentValue: Bunny): Bunny[] => {
+      // Don't let the user bond a bunny to itself
+      if (currentValue.id !== this.selectedBunny.id) {
+        previousValue.push(currentValue);
+      }
+      return previousValue;
+    }, []).map(value => {
+      return {
+        display: `${value.name} ${(value.intakeDate + "").slice(0, 4)}`,
+        value: value.id + ""
+      }
     });
 
     this.data = new FormGroup({
@@ -67,6 +94,7 @@ export class HomeComponent implements OnInit {
       passedAwayReason: new FormControl(this.selectedBunny.passedAwayReason),
       dateOfBirthExplanation: new FormControl(this.selectedBunny.dateOfBirthExplanation),
       spayExplanation: new FormControl(this.selectedBunny.spayExplanation),
+      bondedBunnies: new FormControl()
     });
   }
 
@@ -75,9 +103,11 @@ export class HomeComponent implements OnInit {
       complete: () => {
         this.alertService.databaseSuccessSavingBunny(this.data.controls.name.value);
         this.data.reset();
-        this.autoSuggest.reset();
+        this.selectedBunnyAutoSuggest.reset();
         this.databaseService.getAllBunnies().subscribe((bunnies: Bunny[]) => {
           this.bunnies = bunnies;
+          this.bunniesAvailableToBondOptions = [];
+          this.preselectedBondedBunnies = [];
         }, (error) => {
           this.alertService.databaseErrorFetching(error);
         });
@@ -86,11 +116,10 @@ export class HomeComponent implements OnInit {
         this.alertService.databaseErrorSavingBunny(this.data.controls.name.value, error);
       }
     });
-
   }
 
   ngOnInit(): void {
-    this.filteredBunnies = this.autoSuggest.valueChanges
+    this.selectedBunnyAutoSuggestFilteredBunnies = this.selectedBunnyAutoSuggest.valueChanges
       .pipe(
         startWith(''),
         map(value => this._filter(value))
@@ -133,7 +162,7 @@ export class HomeComponent implements OnInit {
    * It also turns null -> to empty string '' if a text field that was null was modified to empty string
    * so in that case null.isEqual('') is true because to the form they're the same
    */
-  public valid(): boolean {
+  public hasStateChanges(): boolean {
     return this.areNondatesUnequal('name') ||
       this.areNondatesUnequal('gender') ||
       this.areDatesUnequal('intakeDate') ||
@@ -146,7 +175,8 @@ export class HomeComponent implements OnInit {
       this.areDatesUnequal('passedAwayDate') ||
       this.areNondatesUnequal('passedAwayReason') ||
       this.areNondatesUnequal('dateOfBirthExplanation') ||
-      this.areNondatesUnequal('spayExplanation');
+      this.areNondatesUnequal('spayExplanation') ||
+      this.areNondatesUnequal('bondedBunnies');
   }
 
   private areDatesUnequal(value: string) {
@@ -158,9 +188,17 @@ export class HomeComponent implements OnInit {
     return this.selectedBunny[value] !== this.data.controls[value].value.format('YYYY/MM/DD HH:mm:ss.SSS');
   }
 
-  private areNondatesUnequal(value: string) {
-    if (emptyStringOrNull(this.selectedBunny[value]) && emptyStringOrNull(this.data.controls[value].value)) {
+  private areNondatesUnequal(value: string): boolean {
+    if (emptyStringOrNullOrUndefined(this.selectedBunny[value]) && emptyStringOrNullOrUndefined(this.data.controls[value].value)) {
       return false;
+    }
+    if (value === 'bondedBunnies') {
+      // Create new copies so we don't mutate what's in the UI
+      const originalBunnyIds: number[] = [...this.selectedBunny.bondedBunnyIds];
+      const interfaceBunnyIds: number[] = [...this.data.controls[value].value].map((value: string) => Number.parseInt(value));
+      originalBunnyIds.sort();
+      interfaceBunnyIds.sort();
+      return !isEqual(originalBunnyIds, interfaceBunnyIds);
     }
     return this.selectedBunny[value] !== this.data.controls[value].value;
   }

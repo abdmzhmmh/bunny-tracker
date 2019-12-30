@@ -12,6 +12,7 @@ export default class Bunny {
     public intakeDate: Date,
     public rescueType: RESCUE_TYPE,
     public intakeReason: string,
+    public bondedBunnyIds: number[],
     public dateOfBirthExplanation?: DATE_OF_BIRTH_EXPLANATION,
     public id?: number,
     public surrenderName?: string,
@@ -32,6 +33,9 @@ export default class Bunny {
       formGroup.controls.intakeDate.value ? moment(formGroup.controls.intakeDate.value).startOf('day').toDate() : null,
       formGroup.controls.rescueType.value,
       formGroup.controls.intakeReason.value,
+      formGroup.controls.bondedBunnies.value ? formGroup.controls.bondedBunnies.value.map((bunnyBondOption: string) => {
+        return Number.parseInt(bunnyBondOption);
+      }) : [],
       formGroup.controls.dateOfBirth.value ? formGroup.controls.dateOfBirthExplanation.value : null, // Ignore the value unless the date was set
       id,
       formGroup.controls.surrenderName.value,

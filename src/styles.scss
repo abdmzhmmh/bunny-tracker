@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
 html, body {
   margin: 0;
   padding: 0;
@@ -11,6 +13,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .snackbar-message-success {
   background-color: #28a745
+}
+
+#bunnyBonds > mat-form-field {
+  width: 70%;
 }
 
 .snackbar-message-failure {
