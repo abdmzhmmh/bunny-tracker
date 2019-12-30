@@ -32,7 +32,6 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from './providers/AlertService';
 import { SelectAutocompleteModule } from 'mat-select-autocomplete';
-import { TestComponent } from './components/test/test.component';
 
 @NgModule({
   declarations: [
@@ -40,8 +39,7 @@ import { TestComponent } from './components/test/test.component';
     HomeComponent,
     WebviewDirective,
     NavbarComponent,
-    AddBunnyComponent,
-    TestComponent
+    AddBunnyComponent
   ],
   imports: [
     BrowserModule,
