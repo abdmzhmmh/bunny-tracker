@@ -37,6 +37,8 @@ describe('AddBunnyComponent', () => {
   databaseServiceMock.getAllBunnies = jasmine.createSpy().and.returnValue(of([]));
   databaseServiceMock.getGenders = jasmine.createSpy().and.returnValue(of([]));
   databaseServiceMock.getRescueTypes = jasmine.createSpy().and.returnValue(of([]));
+  databaseServiceMock.getDateOfBirthExplanations = jasmine.createSpy().and.returnValue(of([]));
+  databaseServiceMock.getSpayExplanations = jasmine.createSpy().and.returnValue(of([]));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

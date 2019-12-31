@@ -34,7 +34,7 @@ export default class Bunny {
       formGroup.controls.rescueType.value,
       formGroup.controls.intakeReason.value,
       formGroup.controls.bondedBunnies.value ? formGroup.controls.bondedBunnies.value.map((bunnyBondOption: string) => {
-        return Number.parseInt(bunnyBondOption);
+        return Number.parseInt(bunnyBondOption, 10);
       }) : [],
       formGroup.controls.dateOfBirth.value ? formGroup.controls.dateOfBirthExplanation.value : null, // Ignore the value unless the date was set
       id,

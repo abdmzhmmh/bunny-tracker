@@ -3,8 +3,8 @@ import { HomeComponent } from './home.component';
 import { DatabaseService } from '../../providers/DatabaseService';
 import { of } from 'rxjs';
 import {
-  MatAutocompleteModule, MatDatepickerModule,
-  MatFormFieldModule,
+  MatAutocompleteModule, MatCheckboxModule, MatDatepickerModule,
+  MatFormFieldModule, MatIconModule,
   MatInputModule,
   MatSelectModule,
   MatSnackBar,
@@ -14,6 +14,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Type } from '@angular/core';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { SelectAutocompleteComponent } from 'mat-select-autocomplete';
 
 function spyOnClass<T>(spiedClass: Type<T>) {
   const prototype = spiedClass.prototype;
@@ -38,11 +39,13 @@ describe('HomeComponent', () => {
   databaseServiceMock.getAllBunnies = jasmine.createSpy().and.returnValue(of([]));
   databaseServiceMock.getGenders = jasmine.createSpy().and.returnValue(of([]));
   databaseServiceMock.getRescueTypes = jasmine.createSpy().and.returnValue(of([]));
+  databaseServiceMock.getDateOfBirthExplanations = jasmine.createSpy().and.returnValue(of([]));
+  databaseServiceMock.getSpayExplanations = jasmine.createSpy().and.returnValue(of([]));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatSnackBarModule, MatAutocompleteModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatSelectModule, MatInputModule, NoopAnimationsModule, MatMomentDateModule, MatDatepickerModule],
-      declarations: [HomeComponent],
+      imports: [ MatIconModule, MatCheckboxModule, MatSnackBarModule, MatAutocompleteModule, MatFormFieldModule, ReactiveFormsModule, FormsModule, MatSelectModule, MatInputModule, NoopAnimationsModule, MatMomentDateModule, MatDatepickerModule],
+      declarations: [HomeComponent, SelectAutocompleteComponent],
       providers: [{
         provide: DatabaseService, useValue: databaseServiceMock,
       }, {

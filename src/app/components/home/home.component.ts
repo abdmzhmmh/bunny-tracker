@@ -75,9 +75,9 @@ export class HomeComponent implements OnInit {
       return previousValue;
     }, []).map(value => {
       return {
-        display: `${value.name} ${(value.intakeDate + "").slice(0, 4)}`,
-        value: value.id + ""
-      }
+        display: `${value.name} ${(value.intakeDate + '').slice(0, 4)}`,
+        value: value.id + ''
+      };
     });
 
     this.data = new FormGroup({
@@ -195,7 +195,7 @@ export class HomeComponent implements OnInit {
     if (value === 'bondedBunnies') {
       // Create new copies so we don't mutate what's in the UI
       const originalBunnyIds: number[] = [...this.selectedBunny.bondedBunnyIds];
-      const interfaceBunnyIds: number[] = [...this.data.controls[value].value].map((value: string) => Number.parseInt(value));
+      const interfaceBunnyIds: number[] = [...this.data.controls[value].value].map((interfaceBunnyId: string) => Number.parseInt(interfaceBunnyId, 10));
       originalBunnyIds.sort();
       interfaceBunnyIds.sort();
       return !isEqual(originalBunnyIds, interfaceBunnyIds);

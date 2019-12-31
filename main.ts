@@ -200,7 +200,7 @@ const createWindow = async () => {
       // We want to collapse these many rows into a single bunny javascript object with an array of ids pointing to the other bunnies
       const consolidatedResults: Bunny[] = queryResults.reduce<Bunny[]>((results: Bunny[], currentValue: QueryResult, _currentIndex, array): Bunny[] => {
         // Have I already recorded this bunny in the output array?
-        let possibleBunnyAlreadyInResults: Bunny | undefined = results.find((value: Bunny) => {
+        const possibleBunnyAlreadyInResults: Bunny | undefined = results.find((value: Bunny) => {
           return value.id === currentValue.id;
         });
         if (possibleBunnyAlreadyInResults) {
@@ -298,7 +298,7 @@ WHERE BunnyBondedToBunny.firstBunny = ${bunny.id} OR
       // Reinsert all relationships with this bunny
       if (bunny.bondedBunnyIds.length > 0) {
         log.info('re-inserting relationships');
-        let sqlStatement = `
+        const sqlStatement = `
 INSERT INTO
 BunnyBondedToBunny(firstBunny,
                    secondBunny)
