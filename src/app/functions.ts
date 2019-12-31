@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-export function translateDateToMoment(date: Date) : moment.Moment {
+export function translateDateToMoment(date: Date): moment.Moment {
   return date ? moment(date, 'YYYY/MM/DD HH:mm:ss.SSS') : null;
 }
 
