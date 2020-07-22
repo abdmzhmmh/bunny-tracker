@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import '../polyfills';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -32,6 +32,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AlertService } from './providers/AlertService';
 import { SelectAutocompleteModule } from 'mat-select-autocomplete';
+import { GlobalRendererErrorHandler } from './providers/GlobalRendererErrorHandler';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,10 @@ import { SelectAutocompleteModule } from 'mat-select-autocomplete';
     MatSnackBarModule,
     SelectAutocompleteModule
   ],
-  providers: [DatabaseService, ElectronService, AlertService],
+  providers: [DatabaseService, ElectronService, AlertService, {
+    provide: ErrorHandler,
+    useClass: GlobalRendererErrorHandler
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule {

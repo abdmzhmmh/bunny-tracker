@@ -8,6 +8,12 @@ export class AlertService {
   constructor(private snackBar: MatSnackBar) {
   }
 
+  public genericError(error: any) {
+    this.snackBar.open(`An error occured ${error}.`, 'Dismiss', {
+      panelClass: 'snackbar-message-failure'
+    });
+  }
+
   public databaseErrorSavingBunny(bunnyName: string, error: any) {
     this.snackBar.open(`Failure occurred while trying to save bunny named ${bunnyName}. Error was ${error}`, 'Dismiss', {
       panelClass: 'snackbar-message-failure'

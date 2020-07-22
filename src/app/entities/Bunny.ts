@@ -27,15 +27,16 @@ export default class Bunny {
   }
 
   public static from(formGroup: FormGroup, id: number): Bunny {
+    const hasBondedBunnyControl: boolean = formGroup.controls.bondedBunnies != null;
     return new Bunny(
       formGroup.controls.name.value,
       formGroup.controls.gender.value,
       formGroup.controls.intakeDate.value ? moment(formGroup.controls.intakeDate.value).startOf('day').toDate() : null,
       formGroup.controls.rescueType.value,
       formGroup.controls.intakeReason.value,
-      formGroup.controls.bondedBunnies.value ? formGroup.controls.bondedBunnies.value.map((bunnyBondOption: string) => {
+      hasBondedBunnyControl ? (formGroup.controls.bondedBunnies.value ? formGroup.controls.bondedBunnies.value.map((bunnyBondOption: string) => {
         return Number.parseInt(bunnyBondOption, 10);
-      }) : [],
+      }) : []) : [],
       formGroup.controls.dateOfBirth.value ? formGroup.controls.dateOfBirthExplanation.value : null, // Ignore the value unless the date was set
       id,
       formGroup.controls.surrenderName.value,
