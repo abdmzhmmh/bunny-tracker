@@ -1,23 +1,22 @@
-import {expect, assert} from 'chai';
-import {SpectronClient} from 'spectron';
+import { expect, assert } from 'chai';
+import { SpectronClient } from 'spectron';
 
 import commonSetup from './common-setup';
 
 describe('bunny-tracker application', function () {
   commonSetup.apply(this);
 
-  let browser: any;
   let client: SpectronClient;
 
   beforeEach(function () {
     client = this.app.client;
-    browser = client as any;
   });
 
-  // it('should display message saying Search for Bunnies', async function () {
-  //   const text = await browser.getText('app-home h1');
-  //   expect(text).to.equal('Search for Bunnies');
-  // });
+  it('should display message saying Search for Bunnies', async function () {
+    // client.$('app-home h1');
+    const element = await client.element('[data-test="add-bunny-nav"]');
+    expect(element).to.have.text('Add Bunny');
+  });
 
 
   it('creates initial windows', async function () {

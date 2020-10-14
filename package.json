@@ -35,7 +35,8 @@
     "electron:windows": "npm run build:prod && electron-builder build --windows",
     "electron:mac": "npm run build:prod && electron-builder build --mac",
     "test": "npm run postinstall:web && ng test",
-    "e2e": "npm run build:prod && mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts"
+    "e2e": "mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts",
+    "e2e:full": "npm run build:prod && mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "0.12.1",
@@ -54,8 +55,10 @@
     "@ngx-translate/http-loader": "4.0.0",
     "@types/jasmine": "2.8.7",
     "@types/jasminewd2": "2.0.3",
+    "@types/lodash": "^4.14.149",
     "@types/mocha": "^5.2.6",
     "@types/node": "8.9.4",
+    "@types/webdriverio": "4.13.3",
     "chai": "^4.2.0",
     "codelyzer": "4.5.0",
     "conventional-changelog-cli": "2.0.11",
@@ -94,7 +97,6 @@
     "@angular/platform-browser": "^7.2.5",
     "@angular/platform-browser-dynamic": "^7.2.5",
     "@angular/router": "^7.2.5",
-    "@types/lodash": "^4.14.149",
     "electron-is": "^3.0.0",
     "electron-log": "^3.0.5",
     "lodash-es": "^4.17.15",

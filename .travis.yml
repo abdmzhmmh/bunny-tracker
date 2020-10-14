@@ -23,7 +23,7 @@ install:
 script:
   - ng lint
   - npm run test
-  - npm run e2e
+  - npm run e2e:full
   - npm run build
 after_success:
   - source release.script
