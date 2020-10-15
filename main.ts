@@ -136,6 +136,9 @@ const template: Array<(MenuItemConstructorOptions) | (MenuItem)> = [
         click() {
           shell.openExternalSync('https://github.com/Jazzepi/bunny-tracker');
         }
+      },
+      {
+        role: 'toggledevtools'
       }
     ]
   },

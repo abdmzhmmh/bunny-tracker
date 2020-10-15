@@ -35,7 +35,9 @@ export default function setup() {
 
   afterEach(function () {
     if (this.app && this.app.isRunning()) {
-      return this.app.stop();
+      if (this.currentTest.state === 'passed') {
+        return this.app.stop();
+      }
     }
   });
 }
